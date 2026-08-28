@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Hotel & Comset</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header / Navbar -->
+    <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-hotel text-2xl text-indigo-300"></i>
+                <div>
+                    <h1 id="headerHotelName" class="font-bold text-lg leading-tight">Grand Hotel & Resort</h1>
+                    <p id="headerHotelContact" class="text-xs text-indigo-200">Alamat Hotel | Telp: -</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-1">
+                <button onclick="switchTab('dashboard')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition bg-indigo-800 text-white" data-tab="dashboard">
+                    <i class="fa-solid fa-chart-pie mr-2"></i>Dashboard
+                </button>
+                <button onclick="switchTab('guests')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition text-indigo-200 hover:bg-indigo-800 hover:text-white" data-tab="guests">
+                    <i class="fa-solid fa-users mr-2"></i>Database Tamu
+                </button>
+                <button onclick="switchTab('comset')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition text-indigo-200 hover:bg-indigo-800 hover:text-white" data-tab="comset">
+                    <i class="fa-solid fa-chart-line mr-2"></i>Data Comset
+                </button>
+                <button onclick="switchTab('settings')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition text-indigo-200 hover:bg-indigo-800 hover:text-white" data-tab="settings">
+                    <i class="fa-solid fa-gear mr-2"></i>Setting Hotel
+                </button>
+            </nav>
+            <div class="md:hidden flex items-center">
+                <button id="menuToggle" onclick="toggleMobileMenu()" class="text-indigo-200 hover:text-white focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-3 space-y-1 bg-indigo-950 border-t border-indigo-800">
+            <button onclick="switchTab('dashboard'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-indigo-200 hover:bg-indigo-800 hover:text-white">Dashboard</button>
+            <button onclick="switchTab('guests'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-indigo-200 hover:bg-indigo-800 hover:text-white">Database Tamu</button>
+            <button onclick="switchTab('comset'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-indigo-200 hover:bg-indigo-800 hover:text-white">Data Comset</button>
+            <button onclick="switchTab('settings'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-indigo-200 hover:bg-indigo-800 hover:text-white">Setting Hotel</button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+
+        <!-- TAB 1: DASHBOARD -->
+        <section id="tab-dashboard" class="tab-content space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Dashboard Utama</h2>
+                    <p class="text-sm text-slate-500">Ringkasan data tamu dan MTD Comset (Month-to-Date)</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-sm">
+                        <label for="filterMonth" class="text-xs font-semibold text-slate-500 uppercase">Bulan:</label>
+                        <select id="filterMonth" onchange="renderDashboard()" class="bg-transparent font-medium text-slate-700 focus:outline-none">
+                            <option value="01">Januari</option>
+                            <option value="02">Februari</option>
+                            <option value="03">Maret</option>
+                            <option value="04">April</option>
+                            <option value="05">Mei</option>
+                            <option value="06" selected>Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">Agustus</option>
+                            <option value="09">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-sm">
+                        <label for="filterYear" class="text-xs font-semibold text-slate-500 uppercase">Tahun:</label>
+                        <select id="filterYear" onchange="renderDashboard()" class="bg-transparent font-medium text-slate-700 focus:outline-none">
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                    </div>
+                    <button onclick="generateAiRevenueInsights()" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm flex items-center transition">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-2 text-amber-300"></i> ✨ Analisis AI Revenue
+                    </button>
+                </div>
+            </div>
+
+            <!-- AI Insight Box -->
+            <div id="aiInsightBox" class="hidden bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-lg border border-indigo-700 relative">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-bold text-base flex items-center"><i class="fa-solid fa-robot text-indigo-400 mr-2"></i> Laporan Analisis Pintar Gemini AI</h3>
+                    <button onclick="document.getElementById('aiInsightBox').classList.add('hidden')" class="text-indigo-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <div id="aiInsightContent" class="text-sm text-indigo-100 leading-relaxed whitespace-pre-line">
+                    Memuat analisis...
+                </div>
+            </div>
+
+            <!-- Kartu Statistik Singkat -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Tamu Periode Ini</p>
+                        <h3 id="statTotalGuests" class="text-2xl font-bold text-slate-700 mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Kota Asal</p>
+                        <h3 id="statTotalCities" class="text-2xl font-bold text-slate-700 mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-city"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Provinsi Asal</p>
+                        <h3 id="statTotalProvinces" class="text-2xl font-bold text-slate-700 mt-1">0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-map"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">MTD Room Revenue</p>
+                        <h3 id="statMtdRevenue" class="text-xl font-bold text-slate-700 mt-1">Rp 0</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top 10 Kota & Provinsi dengan Fitur Klik Detail -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- 10 Besar Kota -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-trophy text-amber-500 mr-2"></i>10 Besar Kota Tamu (Berdasarkan Periode)</h3>
+                    <p class="text-xs text-slate-400 mb-4">Klik salah satu baris kota untuk melihat daftar detail tamu.</p>
+                    <div class="overflow-x-auto max-h-72 overflow-y-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="sticky top-0 bg-slate-50">
+                                <tr class="border-b border-slate-100 text-xs text-slate-400 uppercase">
+                                    <th class="py-2 px-3">Peringkat</th>
+                                    <th class="py-2 px-3">Kota</th>
+                                    <th class="py-2 px-3 text-right">Jumlah Tamu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topCitiesTableBody" class="text-sm divide-y divide-slate-50"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 10 Besar Provinsi -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-award text-indigo-500 mr-2"></i>10 Besar Provinsi Tamu (Berdasarkan Periode)</h3>
+                    <p class="text-xs text-slate-400 mb-4">Klik salah satu baris provinsi untuk melihat daftar detail tamu.</p>
+                    <div class="overflow-x-auto max-h-72 overflow-y-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="sticky top-0 bg-slate-50">
+                                <tr class="border-b border-slate-100 text-xs text-slate-400 uppercase">
+                                    <th class="py-2 px-3">Peringkat</th>
+                                    <th class="py-2 px-3">Provinsi</th>
+                                    <th class="py-2 px-3 text-right">Jumlah Tamu</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topProvincesTableBody" class="text-sm divide-y divide-slate-50"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABEL DETAIL TAMU BERDASARKAN PILIHAN KOTA/PROVINSI -->
+            <div id="guestDetailContainer" class="bg-white p-6 rounded-xl shadow-sm border border-indigo-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="guestDetailTitle" class="font-bold text-slate-800 text-base"><i class="fa-solid fa-users-viewfinder text-indigo-600 mr-2"></i>Detail Tamu per Wilayah</h3>
+                    <span id="guestDetailFilterInfo" class="text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-medium">Semua Kota/Provinsi pada Periode Ini</span>
+                </div>
+                <div class="overflow-x-auto max-h-80 overflow-y-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="sticky top-0 bg-slate-50">
+                            <tr class="border-b border-slate-100 text-xs text-slate-400 uppercase">
+                                <th class="py-2.5 px-3">Nama Tamu</th>
+                                <th class="py-2.5 px-3">Kota Asal</th>
+                                <th class="py-2.5 px-3">Provinsi Asal</th>
+                                <th class="py-2.5 px-3">Tanggal</th>
+                                <th class="py-2.5 px-3">No WhatsApp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboardDetailGuestsBody" class="text-sm divide-y divide-slate-50"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- MTD Comset -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-chart-line text-blue-600 mr-2"></i>Akumulasi MTD Comset (Month-to-Date)</h3>
+                    <span id="mtdSubtitlePeriod" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md font-medium">Periode Terpilih</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase">
+                                <th class="py-3 px-3">Nama Hotel</th>
+                                <th class="py-3 px-3 text-center">Room Avail</th>
+                                <th class="py-3 px-3 text-center">Room Sold</th>
+                                <th class="py-3 px-3 text-center">Occ (%)</th>
+                                <th class="py-3 px-3 text-right">ARR (Rp)</th>
+                                <th class="py-3 px-3 text-right">Revenue (Rp)</th>
+                                <th class="py-3 px-3 text-center">Mkt Share</th>
+                                <th class="py-3 px-3 text-center">Act Mkt Share</th>
+                                <th class="py-3 px-3 text-right">RevPar (Rp)</th>
+                                <th class="py-3 px-3 text-center">MPI</th>
+                                <th class="py-3 px-3 text-center">RGI</th>
+                                <th class="py-3 px-3 text-center">ARI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mtdComgetTableBody" class="text-sm divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: DATABASE TAMU -->
+        <section id="tab-guests" class="tab-content hidden space-y-6">
+            <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Database Tamu Hotel</h2>
+                    <p class="text-sm text-slate-500">Kelola data informasi tamu yang menginap</p>
+                </div>
+                <button onclick="openGuestModal('add')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center shadow-sm">
+                    <i class="fa-solid fa-user-plus mr-2"></i> Tambah Tamu Baru
+                </button>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-4 border-b border-slate-100 flex justify-between">
+                    <input type="text" id="searchGuestInput" onkeyup="renderGuestsTable()" placeholder="Cari nama tamu / kota..." class="w-full sm:w-72 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-100 text-xs font-semibold text-slate-500 uppercase">
+                                <th class="py-3 px-4">Nama Tamu</th>
+                                <th class="py-3 px-4">Kota</th>
+                                <th class="py-3 px-4">Provinsi</th>
+                                <th class="py-3 px-4">Tanggal Check-In / Lahir</th>
+                                <th class="py-3 px-4">No WhatsApp</th>
+                                <th class="py-3 px-4 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guestsTableBody" class="text-sm divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: DATA COMSET -->
+        <section id="tab-comset" class="tab-content hidden space-y-6">
+            <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Manajemen Data Comset</h2>
+                    <p class="text-sm text-slate-500">Input dan edit data performa harian hotel Anda dan kompetitor</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="generateAiPromoIdeas()" class="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-2 text-amber-300"></i> ✨ Ide Promo AI
+                    </button>
+                    <button onclick="openComsetModal('add')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center shadow-sm">
+                        <i class="fa-solid fa-plus mr-2"></i> Input Data Harian Comset
+                    </button>
+                </div>
+            </div>
+            <div id="aiPromoBox" class="hidden bg-gradient-to-br from-violet-900 to-indigo-950 text-white p-6 rounded-2xl shadow-lg border border-violet-700">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-bold text-base"><i class="fa-solid fa-lightbulb text-amber-400 mr-2"></i> Strategi & Ide Paket Kamar Pintar</h3>
+                    <button onclick="document.getElementById('aiPromoBox').classList.add('hidden')" class="text-violet-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <div id="aiPromoContent" class="text-sm text-violet-100 leading-relaxed whitespace-pre-line">Menyusun rekomendasi promo...</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-4 border-b border-slate-100">
+                    <h3 class="font-bold text-slate-800 text-base">Riwayat Input Harian Comset</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-100 text-xs font-semibold text-slate-500 uppercase">
+                                <th class="py-3 px-3">Tanggal</th>
+                                <th class="py-3 px-3">Nama Hotel</th>
+                                <th class="py-3 px-3 text-center">Room Avail</th>
+                                <th class="py-3 px-3 text-center">Room Sold</th>
+                                <th class="py-3 px-3 text-center">Occ (%)</th>
+                                <th class="py-3 px-3 text-right">ARR (Rp)</th>
+                                <th class="py-3 px-3 text-right">Revenue (Rp)</th>
+                                <th class="py-3 px-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dailyComsetTableBody" class="text-sm divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: SETTING HOTEL -->
+        <section id="tab-settings" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 max-w-2xl mx-auto space-y-6">
+                <div class="border-b border-slate-100 pb-4">
+                    <h2 class="text-xl font-bold text-slate-800">Pengaturan Profil Hotel & Web App</h2>
+                    <p class="text-sm text-slate-500">Kelola informasi hotel utama dan daftar hotel kompetitor (Comset)</p>
+                </div>
+                <form id="settingForm" onsubmit="saveHotelSettings(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">URL Web App Google Apps Script</label>
+                        <input type="text" id="settingScriptUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Nama Hotel Utama</label>
+                        <input type="text" id="settingHotelName" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Alamat Hotel</label>
+                        <textarea id="settingHotelAddress" rows="2" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">No Telepon Hotel</label>
+                        <input type="text" id="settingHotelPhone" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <!-- Manajemen Daftar Hotel Comset -->
+                    <div class="pt-2 border-t border-slate-100">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Daftar Hotel Comset (Kompetitor)</label>
+                        <div id="hotelListContainer" class="space-y-2 mb-3"></div>
+                        <button type="button" onclick="addHotelInput()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-md font-medium transition">
+                            <i class="fa-solid fa-plus mr-1"></i> Tambah Hotel Kompetitor
+                        </button>
+                    </div>
+
+                    <div class="pt-4 flex justify-between items-center border-t border-slate-100">
+                        <button type="button" onclick="syncWithGoogleSheet()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition shadow-sm">
+                            <i class="fa-solid fa-rotate mr-2"></i> Sinkronisasi Data
+                        </button>
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition shadow-sm">
+                            <i class="fa-solid fa-floppy-disk mr-2"></i> Simpan Pengaturan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Tamu -->
+    <div id="guestModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <h3 id="guestModalTitle" class="font-bold text-slate-800 text-base">Tambah Tamu Baru</h3>
+                <button onclick="closeGuestModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="guestForm" onsubmit="handleGuestSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="guestId">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Tamu</label>
+                    <input type="text" id="guestName" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Kota</label>
+                        <input type="text" id="guestCity" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Provinsi</label>
+                        <input type="text" id="guestProvince" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Tanggal Check-In / Lahir</label>
+                        <input type="date" id="guestDob" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">No WhatsApp</label>
+                        <input type="text" id="guestPhone" placeholder="08xxxxxxxxxx" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+                <div class="pt-4 flex justify-end space-x-2">
+                    <button type="button" onclick="closeGuestModal()" class="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Comset -->
+    <div id="comsetModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <h3 id="comsetModalTitle" class="font-bold text-slate-800 text-base">Input Data Harian Comset</h3>
+                <button onclick="closeComsetModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="comsetForm" onsubmit="handleComsetSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="comsetId">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Tanggal</label>
+                    <input type="date" id="comsetDate" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Hotel</label>
+                    <select id="comsetHotelName" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500"></select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Room Available</label>
+                        <input type="number" id="comsetRoomAvail" min="0" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Room Sold</label>
+                        <input type="number" id="comsetRoomSold" min="0" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">ARR (Average Room Rate) (Rp)</label>
+                    <input type="number" id="comsetArr" min="0" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="pt-4 flex justify-end space-x-2">
+                    <button type="button" onclick="closeComsetModal()" class="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Aplikasi -->
+    <script>
+        const apiKey = "";
+        let scriptUrl = localStorage.getItem('googleScriptUrl') || "";
+        let currentFilteredGuests = [];
+        let activeRegionFilter = null; // Menyimpan filter kota/provinsi yang sedang aktif diklik
+
+        let hotelSettings = JSON.parse(localStorage.getItem('hotelSettings')) || {
+            name: "Grand Hotel & Resort",
+            address: "Jl. Raya Hotel No. 88, Denpasar, Bali",
+            phone: "+62 361 5551234"
+        };
+
+        let comsetHotelsList = JSON.parse(localStorage.getItem('comsetHotelsList')) || [
+            hotelSettings.name,
+            "Hotel Santika Premiere",
+            "Aston Hotel & Convention",
+            "Swiss-Belhotel Internasional"
+        ];
+
+        let guests = JSON.parse(localStorage.getItem('hotelGuests')) || [
+            { id: 1, name: "Budi Santoso", city: "Jakarta", province: "DKI Jakarta", dob: "2026-06-05", phone: "081234567890" },
+            { id: 2, name: "Siti Rahma", city: "Surabaya", province: "Jawa Timur", dob: "2026-06-12", phone: "081987654321" }
+        ];
+
+        let dailyComsetLogs = JSON.parse(localStorage.getItem('dailyComsetLogs')) || [
+            { id: 1, date: "2026-06-01", hotelName: hotelSettings.name, roomAvail: 100, roomSold: 75, arr: 1000000 },
+            { id: 2, date: "2026-06-01", hotelName: "Hotel Santika Premiere", roomAvail: 120, roomSold: 90, arr: 1100000 }
+        ];
+
+        window.onload = function() {
+            applyHotelSettingsToUI();
+            
+            const now = new Date();
+            const currMonth = String(now.getMonth() + 1).padStart(2, '0');
+            const currYear = String(now.getFullYear());
+            
+            document.getElementById('filterMonth').value = currMonth;
+            document.getElementById('filterYear').value = currYear;
+
+            switchTab('dashboard');
+            document.getElementById('comsetDate').valueAsDate = new Date();
+            if(scriptUrl) {
+                syncWithGoogleSheet();
+            }
+        };
+
+        async function syncWithGoogleSheet() {
+            if(!scriptUrl) return;
+            try {
+                const response = await fetch(`${scriptUrl}?action=getData`);
+                const data = await response.json();
+                if(data.settings) {
+                    hotelSettings = data.settings;
+                    if(data.hotelsList && data.hotelsList.length > 0) comsetHotelsList = data.hotelsList;
+                    guests = data.guests || [];
+                    dailyComsetLogs = data.comsetLogs || [];
+                    
+                    localStorage.setItem('hotelSettings', JSON.stringify(hotelSettings));
+                    localStorage.setItem('comsetHotelsList', JSON.stringify(comsetHotelsList));
+                    localStorage.setItem('hotelGuests', JSON.stringify(guests));
+                    localStorage.setItem('dailyComsetLogs', JSON.stringify(dailyComsetLogs));
+                    
+                    applyHotelSettingsToUI();
+                    renderDashboard();
+                    alert("Sinkronisasi data berhasil!");
+                }
+            } catch (err) {
+                console.error("Gagal sinkronisasi dengan Google Sheets:", err);
+                alert("Gagal terhubung ke Google Apps Script. Periksa kembali URL Web App Anda.");
+            }
+        }
+
+        async function saveDataToCloud(actionType) {
+            if(!scriptUrl) return;
+            try {
+                await fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: actionType,
+                        settings: hotelSettings,
+                        hotelsList: comsetHotelsList,
+                        guests: guests,
+                        comsetLogs: dailyComsetLogs
+                    })
+                });
+            } catch (err) {
+                console.error("Gagal mengirim data ke cloud:", err);
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-800', 'text-white');
+                btn.classList.add('text-indigo-200');
+                if(btn.dataset.tab === tabId) {
+                    btn.classList.add('bg-indigo-800', 'text-white');
+                    btn.classList.remove('text-indigo-200');
+                }
+            });
+
+            if(tabId === 'dashboard') renderDashboard();
+            else if(tabId === 'guests') renderGuestsTable();
+            else if(tabId === 'comset') renderDailyComsetTable();
+            else if(tabId === 'settings') loadSettingsForm();
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        function applyHotelSettingsToUI() {
+            document.getElementById('headerHotelName').innerText = hotelSettings.name;
+            document.getElementById('headerHotelContact').innerText = `${hotelSettings.address} | Telp: ${hotelSettings.phone}`;
+            comsetHotelsList[0] = hotelSettings.name;
+        }
+
+        function loadSettingsForm() {
+            document.getElementById('settingScriptUrl').value = scriptUrl;
+            document.getElementById('settingHotelName').value = hotelSettings.name;
+            document.getElementById('settingHotelAddress').value = hotelSettings.address;
+            document.getElementById('settingHotelPhone').value = hotelSettings.phone;
+            renderHotelInputs();
+        }
+
+        function renderHotelInputs() {
+            const container = document.getElementById('hotelListContainer');
+            container.innerHTML = '';
+            comsetHotelsList.forEach((hotel, idx) => {
+                container.innerHTML += `
+                    <div class="flex items-center gap-2">
+                        <input type="text" value="${hotel}" ${idx === 0 ? 'readonly title="Hotel Utama"' : ''} class="hotel-input-item w-full px-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500 ${idx === 0 ? 'bg-slate-100 text-slate-500' : ''}">
+                        ${idx !== 0 ? `<button type="button" onclick="removeHotelInput(this)" class="text-rose-500 hover:text-rose-700 px-2"><i class="fa-solid fa-trash"></i></button>` : '<span class="text-xs text-slate-400 px-2">Utama</span>'}
+                    </div>
+                `;
+            });
+        }
+
+        function addHotelInput() {
+            const container = document.getElementById('hotelListContainer');
+            const div = document.createElement('div');
+            div.className = "flex items-center gap-2";
+            div.innerHTML = `
+                <input type="text" placeholder="Nama Hotel Kompetitor" class="hotel-input-item w-full px-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                <button type="button" onclick="removeHotelInput(this)" class="text-rose-500 hover:text-rose-700 px-2"><i class="fa-solid fa-trash"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeHotelInput(btn) {
+            btn.parentElement.remove();
+        }
+
+        function saveHotelSettings(e) {
+            e.preventDefault();
+            scriptUrl = document.getElementById('settingScriptUrl').value.trim();
+            hotelSettings.name = document.getElementById('settingHotelName').value;
+            hotelSettings.address = document.getElementById('settingHotelAddress').value;
+            hotelSettings.phone = document.getElementById('settingHotelPhone').value;
+
+            const inputs = document.querySelectorAll('.hotel-input-item');
+            let newHotels = [];
+            inputs.forEach(inp => {
+                const val = inp.value.trim();
+                if(val) newHotels.push(val);
+            });
+            if(newHotels.length > 0) {
+                newHotels[0] = hotelSettings.name;
+                comsetHotelsList = newHotels;
+            }
+
+            localStorage.setItem('googleScriptUrl', scriptUrl);
+            localStorage.setItem('hotelSettings', JSON.stringify(hotelSettings));
+            localStorage.setItem('comsetHotelsList', JSON.stringify(comsetHotelsList));
+            
+            applyHotelSettingsToUI();
+            saveDataToCloud('saveSettings');
+            alert('Pengaturan dan daftar hotel berhasil disimpan serta disinkronkan ke cloud!');
+            switchTab('dashboard');
+        }
+
+        async function callGeminiApi(systemPrompt, userQuery) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            return result.candidates?.[0]?.content?.parts?.[0]?.text || "Gagal memuat respons AI.";
+        }
+
+        async function generateAiRevenueInsights() {
+            const box = document.getElementById('aiInsightBox');
+            const content = document.getElementById('aiInsightContent');
+            box.classList.remove('hidden');
+            content.innerText = "⏳ Gemini AI sedang menganalisis data...";
+            const res = await callGeminiApi("Pakar Revenue Management hotel.", `Analisis hotel ${hotelSettings.name} dengan ${guests.length} tamu.`);
+            content.innerText = res;
+        }
+
+        async function generateAiPromoIdeas() {
+            const box = document.getElementById('aiPromoBox');
+            const content = document.getElementById('aiPromoContent');
+            box.classList.remove('hidden');
+            content.innerText = "⏳ Menyusun rekomendasi promo...";
+            const res = await callGeminiApi("Konsultan pemasaran hotel.", `Berikan ide promo untuk ${hotelSettings.name}.`);
+            content.innerText = res;
+        }
+
+        function renderGuestsTable() {
+            const tbody = document.getElementById('guestsTableBody');
+            const keyword = document.getElementById('searchGuestInput').value.toLowerCase();
+            tbody.innerHTML = '';
+            const filtered = guests.filter(g => g.name.toLowerCase().includes(keyword) || g.city.toLowerCase().includes(keyword));
+            
+            filtered.forEach(g => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 border-b border-slate-50">
+                        <td class="py-3 px-4 font-medium">${g.name}</td>
+                        <td class="py-3 px-4 text-slate-600">${g.city}</td>
+                        <td class="py-3 px-4 text-slate-600">${g.province}</td>
+                        <td class="py-3 px-4 text-slate-600">${g.dob}</td>
+                        <td class="py-3 px-4 text-slate-600">${g.phone}</td>
+                        <td class="py-3 px-4 text-center space-x-2">
+                            <button onclick="editGuest(${g.id})" class="text-indigo-600 hover:text-indigo-800" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteGuest(${g.id})" class="text-rose-500 hover:text-rose-700" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openGuestModal(mode, id = null) {
+            document.getElementById('guestModal').classList.remove('hidden');
+            if(mode === 'add') {
+                document.getElementById('guestModalTitle').innerText = "Tambah Tamu Baru";
+                document.getElementById('guestForm').reset();
+                document.getElementById('guestId').value = '';
+                document.getElementById('guestDob').valueAsDate = new Date();
+            } else {
+                document.getElementById('guestModalTitle').innerText = "Edit Data Tamu";
+                const guest = guests.find(g => g.id === id);
+                if(guest) {
+                    document.getElementById('guestId').value = guest.id;
+                    document.getElementById('guestName').value = guest.name;
+                    document.getElementById('guestCity').value = guest.city;
+                    document.getElementById('guestProvince').value = guest.province;
+                    document.getElementById('guestDob').value = guest.dob;
+                    document.getElementById('guestPhone').value = guest.phone;
+                }
+            }
+        }
+        function closeGuestModal() { document.getElementById('guestModal').classList.add('hidden'); }
+
+        function handleGuestSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('guestId').value;
+            const guestData = {
+                id: id ? Number(id) : Date.now(),
+                name: document.getElementById('guestName').value,
+                city: document.getElementById('guestCity').value,
+                province: document.getElementById('guestProvince').value,
+                dob: document.getElementById('guestDob').value,
+                phone: document.getElementById('guestPhone').value
+            };
+
+            if(id) {
+                const index = guests.findIndex(g => g.id == id);
+                if(index !== -1) guests[index] = guestData;
+            } else {
+                guests.push(guestData);
+            }
+
+            localStorage.setItem('hotelGuests', JSON.stringify(guests));
+            saveDataToCloud('saveGuests');
+            closeGuestModal();
+            renderGuestsTable();
+            renderDashboard();
+        }
+
+        function editGuest(id) {
+            openGuestModal('edit', id);
+        }
+
+        function deleteGuest(id) {
+            if(confirm('Hapus tamu?')) {
+                guests = guests.filter(g => g.id !== id);
+                localStorage.setItem('hotelGuests', JSON.stringify(guests));
+                saveDataToCloud('saveGuests');
+                renderGuestsTable();
+                renderDashboard();
+            }
+        }
+
+        function openComsetModal(mode = 'add', id = null) {
+            document.getElementById('comsetModal').classList.remove('hidden');
+            const select = document.getElementById('comsetHotelName');
+            select.innerHTML = comsetHotelsList.map(h => `<option value="${h}">${h}</option>`).join('');
+
+            if(mode === 'add') {
+                document.getElementById('comsetModalTitle').innerText = "Input Data Harian Comset";
+                document.getElementById('comsetForm').reset();
+                document.getElementById('comsetId').value = '';
+                document.getElementById('comsetDate').valueAsDate = new Date();
+            } else {
+                document.getElementById('comsetModalTitle').innerText = "Edit Data Harian Comset";
+                const log = dailyComsetLogs.find(c => c.id === id);
+                if(log) {
+                    document.getElementById('comsetId').value = log.id;
+                    document.getElementById('comsetDate').value = log.date;
+                    document.getElementById('comsetHotelName').value = log.hotelName;
+                    document.getElementById('comsetRoomAvail').value = log.roomAvail;
+                    document.getElementById('comsetRoomSold').value = log.roomSold;
+                    document.getElementById('comsetArr').value = log.arr;
+                }
+            }
+        }
+        function closeComsetModal() { document.getElementById('comsetModal').classList.add('hidden'); }
+
+        function handleComsetSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('comsetId').value;
+            const logData = {
+                id: id ? Number(id) : Date.now(),
+                date: document.getElementById('comsetDate').value,
+                hotelName: document.getElementById('comsetHotelName').value,
+                roomAvail: Number(document.getElementById('comsetRoomAvail').value),
+                roomSold: Number(document.getElementById('comsetRoomSold').value),
+                arr: Number(document.getElementById('comsetArr').value)
+            };
+
+            if(id) {
+                const index = dailyComsetLogs.findIndex(c => c.id == id);
+                if(index !== -1) dailyComsetLogs[index] = logData;
+            } else {
+                dailyComsetLogs.push(logData);
+            }
+
+            localStorage.setItem('dailyComsetLogs', JSON.stringify(dailyComsetLogs));
+            saveDataToCloud('saveComset');
+            closeComsetModal();
+            renderDailyComsetTable();
+            renderDashboard();
+        }
+
+        function editComsetLog(id) {
+            openComsetModal('edit', id);
+        }
+
+        function deleteComsetLog(id) {
+            if(confirm('Hapus log comset?')) {
+                dailyComsetLogs = dailyComsetLogs.filter(c => c.id !== id);
+                localStorage.setItem('dailyComsetLogs', JSON.stringify(dailyComsetLogs));
+                saveDataToCloud('saveComset');
+                renderDailyComsetTable();
+                renderDashboard();
+            }
+        }
+
+        function renderDailyComsetTable() {
+            const tbody = document.getElementById('dailyComsetTableBody');
+            tbody.innerHTML = dailyComsetLogs.map(c => `
+                <tr class="hover:bg-slate-50 border-b border-slate-50">
+                    <td class="py-3 px-3 text-slate-600">${c.date}</td>
+                    <td class="py-3 px-3 font-medium">${c.hotelName}</td>
+                    <td class="py-3 px-3 text-center">${c.roomAvail}</td>
+                    <td class="py-3 px-3 text-center">${c.roomSold}</td>
+                    <td class="py-3 px-3 text-center">${((c.roomSold/c.roomAvail)*100).toFixed(1)}%</td>
+                    <td class="py-3 px-3 text-right">Rp ${c.arr.toLocaleString('id-ID')}</td>
+                    <td class="py-3 px-3 text-right font-medium">Rp ${(c.roomSold*c.arr).toLocaleString('id-ID')}</td>
+                    <td class="py-3 px-3 text-center space-x-2">
+                        <button onclick="editComsetLog(${c.id})" class="text-indigo-600 hover:text-indigo-800" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteComsetLog(${c.id})" class="text-rose-500 hover:text-rose-700" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterGuestsByRegion(type, name) {
+            activeRegionFilter = { type, name };
+            const selectedMonth = document.getElementById('filterMonth').value;
+            const selectedYear = document.getElementById('filterYear').value;
+
+            const filteredGuests = guests.filter(g => {
+                if(!g.dob) return false;
+                const [year, month] = g.dob.split('-');
+                if(year !== selectedYear || month !== selectedMonth) return false;
+                if(type === 'city') return g.city.toLowerCase() === name.toLowerCase();
+                if(type === 'province') return g.province.toLowerCase() === name.toLowerCase();
+                return true;
+            });
+
+            document.getElementById('guestDetailTitle').innerHTML = `<i class="fa-solid fa-users-viewfinder text-indigo-600 mr-2"></i>Detail Tamu Asal ${type === 'city' ? 'Kota' : 'Provinsi'}: <span class="text-indigo-600">${name}</span>`;
+            document.getElementById('guestDetailFilterInfo').innerHTML = `<button onclick="resetRegionFilter()" class="text-rose-600 hover:underline"><i class="fa-solid fa-xmark mr-1"></i>Reset Filter</button>`;
+            
+            const detailGuestsBody = document.getElementById('dashboardDetailGuestsBody');
+            detailGuestsBody.innerHTML = filteredGuests.map(g => `
+                <tr class="border-b border-slate-50 hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-medium text-slate-800">${g.name}</td>
+                    <td class="py-2.5 px-3 text-slate-600">${g.city}</td>
+                    <td class="py-2.5 px-3 text-slate-600">${g.province}</td>
+                    <td class="py-2.5 px-3 text-slate-500 text-xs">${g.dob}</td>
+                    <td class="py-2.5 px-3 text-slate-600">${g.phone}</td>
+                </tr>
+            `).join('') || `<tr><td colspan="5" class="py-4 text-center text-slate-400">Tidak ada data tamu untuk ${name} pada periode ini</td></tr>`;
+        }
+
+        function resetRegionFilter() {
+            activeRegionFilter = null;
+            renderDashboard();
+        }
+
+        function renderDashboard() {
+            const selectedMonth = document.getElementById('filterMonth').value;
+            const selectedYear = document.getElementById('filterYear').value;
+
+            const monthNames = {
+                "01": "Januari", "02": "Februari", "03": "Maret", "04": "April",
+                "05": "Mei", "06": "Juni", "07": "Juli", "08": "Agustus",
+                "09": "September", "10": "Oktober", "11": "November", "12": "Desember"
+            };
+            document.getElementById('mtdSubtitlePeriod').innerText = `Periode: ${monthNames[selectedMonth]} ${selectedYear}`;
+
+            // Filter data tamu berdasarkan periode
+            const filteredGuests = guests.filter(g => {
+                if(!g.dob) return false;
+                const [year, month] = g.dob.split('-');
+                return year === selectedYear && month === selectedMonth;
+            });
+
+            let cityCounts = {}, provinceCounts = {};
+            filteredGuests.forEach(g => {
+                cityCounts[g.city] = (cityCounts[g.city] || 0) + 1;
+                provinceCounts[g.province] = (provinceCounts[g.province] || 0) + 1;
+            });
+
+            document.getElementById('statTotalGuests').innerText = filteredGuests.length;
+            document.getElementById('statTotalCities').innerText = Object.keys(cityCounts).length;
+            document.getElementById('statTotalProvinces').innerText = Object.keys(provinceCounts).length;
+
+            // Render Top Kota dengan klik interaktif
+            const topCities = Object.entries(cityCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
+            document.getElementById('topCitiesTableBody').innerHTML = topCities.map(([city, count], idx) => `
+                <tr onclick="filterGuestsByRegion('city', '${city}')" class="border-b border-slate-50 cursor-pointer hover:bg-indigo-50/60 transition">
+                    <td class="py-2.5 px-3 font-semibold text-indigo-600">#${idx+1}</td>
+                    <td class="py-2.5 px-3 font-medium text-slate-700 underline decoration-indigo-300">${city}</td>
+                    <td class="py-2.5 px-3 text-right font-semibold">${count} Tamu</td>
+                </tr>
+            `).join('') || `<tr><td colspan="3" class="py-4 text-center text-slate-400">Belum ada data</td></tr>`;
+
+            // Render Top Provinsi dengan klik interaktif
+            const topProvs = Object.entries(provinceCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
+            document.getElementById('topProvincesTableBody').innerHTML = topProvs.map(([prov, count], idx) => `
+                <tr onclick="filterGuestsByRegion('province', '${prov}')" class="border-b border-slate-50 cursor-pointer hover:bg-indigo-50/60 transition">
+                    <td class="py-2.5 px-3 font-semibold text-indigo-600">#${idx+1}</td>
+                    <td class="py-2.5 px-3 font-medium text-slate-700 underline decoration-indigo-300">${prov}</td>
+                    <td class="py-2.5 px-3 text-right font-semibold">${count} Tamu</td>
+                </tr>
+            `).join('') || `<tr><td colspan="3" class="py-4 text-center text-slate-400">Belum ada data</td></tr>`;
+
+            // Render Detail Tamu di Dashboard (jika tidak ada filter aktif)
+            if(!activeRegionFilter) {
+                document.getElementById('guestDetailTitle').innerHTML = `<i class="fa-solid fa-list-check text-indigo-600 mr-2"></i>Detail Seluruh Tamu (Berdasarkan Periode)`;
+                document.getElementById('guestDetailFilterInfo').innerText = `Total: ${filteredGuests.length} Tamu`;
+                
+                const detailGuestsBody = document.getElementById('dashboardDetailGuestsBody');
+                detailGuestsBody.innerHTML = filteredGuests.map(g => `
+                    <tr class="border-b border-slate-50 hover:bg-slate-50">
+                        <td class="py-2.5 px-3 font-medium text-slate-800">${g.name}</td>
+                        <td class="py-2.5 px-3 text-slate-600">${g.city}</td>
+                        <td class="py-2.5 px-3 text-slate-600">${g.province}</td>
+                        <td class="py-2.5 px-3 text-slate-500 text-xs">${g.dob}</td>
+                        <td class="py-2.5 px-3 text-slate-600">${g.phone}</td>
+                    </tr>
+                `).join('') || `<tr><td colspan="5" class="py-4 text-center text-slate-400">Tidak ada data tamu pada periode ini</td></tr>`;
+            } else {
+                filterGuestsByRegion(activeRegionFilter.type, activeRegionFilter.name);
+            }
+
+            // Filter data comset
+            const filteredLogs = dailyComsetLogs.filter(l => {
+                if(!l.date) return false;
+                const [year, month] = l.date.split('-');
+                return year === selectedYear && month === selectedMonth;
+            });
+
+            let mtdMap = {};
+            comsetHotelsList.forEach(h => mtdMap[h] = { roomAvail: 0, roomSold: 0, totalRev: 0 });
+            filteredLogs.forEach(l => {
+                if(!mtdMap[l.hotelName]) mtdMap[l.hotelName] = { roomAvail: 0, roomSold: 0, totalRev: 0 };
+                mtdMap[l.hotelName].roomAvail += l.roomAvail;
+                mtdMap[l.hotelName].roomSold += l.roomSold;
+                mtdMap[l.hotelName].totalRev += (l.roomSold * l.arr);
+            });
+
+            let totalAvailAll = 0, totalSoldAll = 0, hotelArr = [];
+            Object.keys(mtdMap).forEach(h => {
+                totalAvailAll += mtdMap[h].roomAvail;
+                totalSoldAll += mtdMap[h].roomSold;
+                let occ = mtdMap[h].roomAvail > 0 ? (mtdMap[h].roomSold / mtdMap[h].roomAvail) * 100 : 0;
+                let arr = mtdMap[h].roomSold > 0 ? mtdMap[h].totalRev / mtdMap[h].roomSold : 0;
+                let revPar = mtdMap[h].roomAvail > 0 ? mtdMap[h].totalRev / mtdMap[h].roomAvail : 0;
+                hotelArr.push({ name: h, ...mtdMap[h], occ, arr, revPar });
+            });
+
+            let sumOcc = hotelArr.reduce((a,b)=>a+b.occ,0), sumRevPar = hotelArr.reduce((a,b)=>a+b.revPar,0), sumArr = hotelArr.reduce((a,b)=>a+b.arr,0);
+            let avgOcc = sumOcc / (hotelArr.length || 1), avgRevPar = sumRevPar / (hotelArr.length || 1), avgArr = sumArr / (hotelArr.length || 1);
+
+            let mainRev = 0;
+            document.getElementById('mtdComgetTableBody').innerHTML = hotelArr.map(h => {
+                if(h.name === hotelSettings.name) mainRev = h.totalRev;
+                let mktShare = totalAvailAll > 0 ? (h.roomAvail / totalAvailAll) * 100 : 0;
+                let actMktShare = totalSoldAll > 0 ? (h.roomSold / totalSoldAll) * 100 : 0;
+                let mpi = avgOcc > 0 ? h.occ / avgOcc : 0;
+                let rgi = avgRevPar > 0 ? h.revPar / avgRevPar : 0;
+                let ari = avgArr > 0 ? h.arr / avgArr : 0;
+                let isMain = h.name === hotelSettings.name;
+
+                return `
+                    <tr class="border-b border-slate-50 ${isMain ? 'bg-indigo-50/50 font-semibold' : ''}">
+                        <td class="py-3 px-3">${h.name} ${isMain ? '<span class="text-xs bg-indigo-600 text-white px-1.5 py-0.5 rounded ml-1">Utama</span>' : ''}</td>
+                        <td class="py-3 px-3 text-center">${h.roomAvail}</td>
+                        <td class="py-3 px-3 text-center">${h.roomSold}</td>
+                        <td class="py-3 px-3 text-center">${h.occ.toFixed(1)}%</td>
+                        <td class="py-3 px-3 text-right">Rp ${h.arr.toLocaleString('id-ID', {maximumFractionDigits:0})}</td>
+                        <td class="py-3 px-3 text-right">Rp ${h.totalRev.toLocaleString('id-ID')}</td>
+                        <td class="py-3 px-3 text-center text-indigo-600">${mktShare.toFixed(1)}%</td>
+                        <td class="py-3 px-3 text-center text-indigo-600">${actMktShare.toFixed(1)}%</td>
+                        <td class="py-3 px-3 text-right">Rp ${h.revPar.toLocaleString('id-ID', {maximumFractionDigits:0})}</td>
+                        <td class="py-3 px-3 text-center">${mpi.toFixed(2)}</td>
+                        <td class="py-3 px-3 text-center">${rgi.toFixed(2)}</td>
+                        <td class="py-3 px-3 text-center">${ari.toFixed(2)}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('statMtdRevenue').innerText = `Rp ${mainRev.toLocaleString('id-ID')}`;
+        }
+    </script>
+</body>
+</html>
