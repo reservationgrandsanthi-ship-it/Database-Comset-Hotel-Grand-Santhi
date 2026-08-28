@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Manajemen Hotel & Comset</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-    <!-- Header / Navbar -->
     <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -49,10 +46,8 @@
         </div>
     </header>
 
-    <!-- Main Content Container -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
 
-        <!-- TAB 1: DASHBOARD -->
         <section id="tab-dashboard" class="tab-content space-y-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                 <div>
@@ -92,7 +87,6 @@
                 </div>
             </div>
 
-            <!-- AI Insight Box -->
             <div id="aiInsightBox" class="hidden bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-lg border border-indigo-700 relative">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-bold text-base flex items-center"><i class="fa-solid fa-robot text-indigo-400 mr-2"></i> Laporan Analisis Pintar Gemini AI</h3>
@@ -103,7 +97,6 @@
                 </div>
             </div>
 
-            <!-- Kartu Statistik Singkat -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
                     <div>
@@ -143,9 +136,7 @@
                 </div>
             </div>
 
-            <!-- Top 10 Kota & Provinsi dengan Fitur Klik Detail -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- 10 Besar Kota -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                     <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-trophy text-amber-500 mr-2"></i>10 Besar Kota Tamu (Berdasarkan Periode)</h3>
                     <p class="text-xs text-slate-400 mb-4">Klik salah satu baris kota untuk melihat daftar detail tamu.</p>
@@ -163,7 +154,6 @@
                     </div>
                 </div>
 
-                <!-- 10 Besar Provinsi -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                     <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-award text-indigo-500 mr-2"></i>10 Besar Provinsi Tamu (Berdasarkan Periode)</h3>
                     <p class="text-xs text-slate-400 mb-4">Klik salah satu baris provinsi untuk melihat daftar detail tamu.</p>
@@ -182,7 +172,6 @@
                 </div>
             </div>
 
-            <!-- TABEL DETAIL TAMU BERDASARKAN PILIHAN KOTA/PROVINSI -->
             <div id="guestDetailContainer" class="bg-white p-6 rounded-xl shadow-sm border border-indigo-100">
                 <div class="flex justify-between items-center mb-4">
                     <h3 id="guestDetailTitle" class="font-bold text-slate-800 text-base"><i class="fa-solid fa-users-viewfinder text-indigo-600 mr-2"></i>Detail Tamu per Wilayah</h3>
@@ -204,7 +193,6 @@
                 </div>
             </div>
 
-            <!-- MTD Comset -->
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-chart-line text-blue-600 mr-2"></i>Akumulasi MTD Comset (Month-to-Date)</h3>
@@ -234,7 +222,6 @@
             </div>
         </section>
 
-        <!-- TAB 2: DATABASE TAMU -->
         <section id="tab-guests" class="tab-content hidden space-y-6">
             <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                 <div>
@@ -267,7 +254,6 @@
             </div>
         </section>
 
-        <!-- TAB 3: DATA COMSET -->
         <section id="tab-comset" class="tab-content hidden space-y-6">
             <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                 <div>
@@ -314,7 +300,6 @@
             </div>
         </section>
 
-        <!-- TAB 4: SETTING HOTEL -->
         <section id="tab-settings" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 max-w-2xl mx-auto space-y-6">
                 <div class="border-b border-slate-100 pb-4">
@@ -322,10 +307,8 @@
                     <p class="text-sm text-slate-500">Kelola informasi hotel utama dan daftar hotel kompetitor (Comset)</p>
                 </div>
                 <form id="settingForm" onsubmit="saveHotelSettings(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">URL Web App Google Apps Script</label>
-                        <input type="text" id="settingScriptUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
-                    </div>
+                    <input type="hidden" id="settingScriptUrl" value="https://script.google.com/macros/s/AKfycbzLGDZZw2CpkXNqXsULFepvz9GDrvrhjCNAfyZoz6_VGtdralt6oYNlwjj56pKIVHv8/exec">
+                    
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Nama Hotel Utama</label>
                         <input type="text" id="settingHotelName" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
@@ -339,7 +322,6 @@
                         <input type="text" id="settingHotelPhone" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
                     </div>
 
-                    <!-- Manajemen Daftar Hotel Comset -->
                     <div class="pt-2 border-t border-slate-100">
                         <label class="block text-sm font-medium text-slate-700 mb-2">Daftar Hotel Comset (Kompetitor)</label>
                         <div id="hotelListContainer" class="space-y-2 mb-3"></div>
@@ -362,7 +344,6 @@
 
     </main>
 
-    <!-- Modal Tamu -->
     <div id="guestModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
@@ -403,7 +384,6 @@
         </div>
     </div>
 
-    <!-- Modal Comset -->
     <div id="comsetModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
@@ -442,12 +422,10 @@
         </div>
     </div>
 
-    <!-- JavaScript Aplikasi -->
     <script>
         const apiKey = "";
-        let scriptUrl = localStorage.getItem('googleScriptUrl') || "";
-        let currentFilteredGuests = [];
-        let activeRegionFilter = null; // Menyimpan filter kota/provinsi yang sedang aktif diklik
+        // Link Google Script Anda sudah ditanam otomatis di sini:
+        let scriptUrl = "https://script.google.com/macros/s/AKfycbzLGDZZw2CpkXNqXsULFepvz9GDrvrhjCNAfyZoz6_VGtdralt6oYNlwjj56pKIVHv8/exec";
 
         let hotelSettings = JSON.parse(localStorage.getItem('hotelSettings')) || {
             name: "Grand Hotel & Resort",
@@ -484,6 +462,8 @@
 
             switchTab('dashboard');
             document.getElementById('comsetDate').valueAsDate = new Date();
+            
+            // Otomatis ambil data dari Google Sheets saat pertama kali dibuka
             if(scriptUrl) {
                 syncWithGoogleSheet();
             }
@@ -507,11 +487,9 @@
                     
                     applyHotelSettingsToUI();
                     renderDashboard();
-                    alert("Sinkronisasi data berhasil!");
                 }
             } catch (err) {
                 console.error("Gagal sinkronisasi dengan Google Sheets:", err);
-                alert("Gagal terhubung ke Google Apps Script. Periksa kembali URL Web App Anda.");
             }
         }
 
@@ -565,7 +543,6 @@
         }
 
         function loadSettingsForm() {
-            document.getElementById('settingScriptUrl').value = scriptUrl;
             document.getElementById('settingHotelName').value = hotelSettings.name;
             document.getElementById('settingHotelAddress').value = hotelSettings.address;
             document.getElementById('settingHotelPhone').value = hotelSettings.phone;
@@ -602,7 +579,6 @@
 
         function saveHotelSettings(e) {
             e.preventDefault();
-            scriptUrl = document.getElementById('settingScriptUrl').value.trim();
             hotelSettings.name = document.getElementById('settingHotelName').value;
             hotelSettings.address = document.getElementById('settingHotelAddress').value;
             hotelSettings.phone = document.getElementById('settingHotelPhone').value;
@@ -618,7 +594,6 @@
                 comsetHotelsList = newHotels;
             }
 
-            localStorage.setItem('googleScriptUrl', scriptUrl);
             localStorage.setItem('hotelSettings', JSON.stringify(hotelSettings));
             localStorage.setItem('comsetHotelsList', JSON.stringify(comsetHotelsList));
             
@@ -859,6 +834,8 @@
             `).join('') || `<tr><td colspan="5" class="py-4 text-center text-slate-400">Tidak ada data tamu untuk ${name} pada periode ini</td></tr>`;
         }
 
+        let activeRegionFilter = null;
+
         function resetRegionFilter() {
             activeRegionFilter = null;
             renderDashboard();
@@ -875,7 +852,6 @@
             };
             document.getElementById('mtdSubtitlePeriod').innerText = `Periode: ${monthNames[selectedMonth]} ${selectedYear}`;
 
-            // Filter data tamu berdasarkan periode
             const filteredGuests = guests.filter(g => {
                 if(!g.dob) return false;
                 const [year, month] = g.dob.split('-');
@@ -892,7 +868,6 @@
             document.getElementById('statTotalCities').innerText = Object.keys(cityCounts).length;
             document.getElementById('statTotalProvinces').innerText = Object.keys(provinceCounts).length;
 
-            // Render Top Kota dengan klik interaktif
             const topCities = Object.entries(cityCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
             document.getElementById('topCitiesTableBody').innerHTML = topCities.map(([city, count], idx) => `
                 <tr onclick="filterGuestsByRegion('city', '${city}')" class="border-b border-slate-50 cursor-pointer hover:bg-indigo-50/60 transition">
@@ -902,7 +877,6 @@
                 </tr>
             `).join('') || `<tr><td colspan="3" class="py-4 text-center text-slate-400">Belum ada data</td></tr>`;
 
-            // Render Top Provinsi dengan klik interaktif
             const topProvs = Object.entries(provinceCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
             document.getElementById('topProvincesTableBody').innerHTML = topProvs.map(([prov, count], idx) => `
                 <tr onclick="filterGuestsByRegion('province', '${prov}')" class="border-b border-slate-50 cursor-pointer hover:bg-indigo-50/60 transition">
@@ -912,7 +886,6 @@
                 </tr>
             `).join('') || `<tr><td colspan="3" class="py-4 text-center text-slate-400">Belum ada data</td></tr>`;
 
-            // Render Detail Tamu di Dashboard (jika tidak ada filter aktif)
             if(!activeRegionFilter) {
                 document.getElementById('guestDetailTitle').innerHTML = `<i class="fa-solid fa-list-check text-indigo-600 mr-2"></i>Detail Seluruh Tamu (Berdasarkan Periode)`;
                 document.getElementById('guestDetailFilterInfo').innerText = `Total: ${filteredGuests.length} Tamu`;
@@ -931,7 +904,6 @@
                 filterGuestsByRegion(activeRegionFilter.type, activeRegionFilter.name);
             }
 
-            // Filter data comset
             const filteredLogs = dailyComsetLogs.filter(l => {
                 if(!l.date) return false;
                 const [year, month] = l.date.split('-');
