@@ -52,10 +52,17 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                 <div>
                     <h2 class="text-xl font-bold text-slate-800">Dashboard Utama</h2>
-                    <p class="text-sm text-slate-500">Ringkasan data tamu dan MTD Comset (Month-to-Date)</p>
+                    <p class="text-sm text-slate-500">Ringkasan data tamu dan Comset (MTD & YTD)</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-3">
                     <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-sm">
+                        <label for="filterMode" class="text-xs font-semibold text-slate-500 uppercase">Mode:</label>
+                        <select id="filterMode" onchange="toggleFilterMode()" class="bg-transparent font-medium text-slate-700 focus:outline-none">
+                            <option value="mtd">Bulanan (MTD)</option>
+                            <option value="ytd" selected>Tahunan (YTD)</option>
+                        </select>
+                    </div>
+                    <div id="monthContainer" class="hidden flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-sm">
                         <label for="filterMonth" class="text-xs font-semibold text-slate-500 uppercase">Bulan:</label>
                         <select id="filterMonth" onchange="renderDashboard()" class="bg-transparent font-medium text-slate-700 focus:outline-none">
                             <option value="01">Januari</option>
@@ -63,7 +70,7 @@
                             <option value="03">Maret</option>
                             <option value="04">April</option>
                             <option value="05">Mei</option>
-                            <option value="06" selected>Juni</option>
+                            <option value="06">Juni</option>
                             <option value="07">Juli</option>
                             <option value="08">Agustus</option>
                             <option value="09">September</option>
@@ -81,26 +88,13 @@
                             <option value="2027">2027</option>
                         </select>
                     </div>
-                    <button onclick="generateAiRevenueInsights()" class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm flex items-center transition">
-                        <i class="fa-solid fa-wand-magic-sparkles mr-2 text-amber-300"></i> ✨ Analisis AI Revenue
-                    </button>
-                </div>
-            </div>
-
-            <div id="aiInsightBox" class="hidden bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-lg border border-indigo-700 relative">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-bold text-base flex items-center"><i class="fa-solid fa-robot text-indigo-400 mr-2"></i> Laporan Analisis Pintar Gemini AI</h3>
-                    <button onclick="document.getElementById('aiInsightBox').classList.add('hidden')" class="text-indigo-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-                </div>
-                <div id="aiInsightContent" class="text-sm text-indigo-100 leading-relaxed whitespace-pre-line">
-                    Memuat analisis...
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Tamu Periode Ini</p>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Tamu Periode</p>
                         <h3 id="statTotalGuests" class="text-2xl font-bold text-slate-700 mt-1">0</h3>
                     </div>
                     <div class="w-12 h-12 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
@@ -127,7 +121,7 @@
                 </div>
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">MTD Room Revenue</p>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Room Revenue Periode</p>
                         <h3 id="statMtdRevenue" class="text-xl font-bold text-slate-700 mt-1">Rp 0</h3>
                     </div>
                     <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
@@ -138,8 +132,8 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                    <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-trophy text-amber-500 mr-2"></i>10 Besar Kota Tamu (Berdasarkan Periode)</h3>
-                    <p class="text-xs text-slate-400 mb-4">Klik salah satu baris kota untuk melihat daftar detail tamu.</p>
+                    <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-trophy text-amber-500 mr-2"></i>10 Besar Kota Tamu</h3>
+                    <p class="text-xs text-slate-400 mb-4">Klik baris kota untuk melihat detail tamu & opsi WhatsApp Blast.</p>
                     <div class="overflow-x-auto max-h-72 overflow-y-auto">
                         <table class="w-full text-left border-collapse">
                             <thead class="sticky top-0 bg-slate-50">
@@ -155,8 +149,8 @@
                 </div>
 
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                    <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-award text-indigo-500 mr-2"></i>10 Besar Provinsi Tamu (Berdasarkan Periode)</h3>
-                    <p class="text-xs text-slate-400 mb-4">Klik salah satu baris provinsi untuk melihat daftar detail tamu.</p>
+                    <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-award text-indigo-500 mr-2"></i>10 Besar Provinsi Tamu</h3>
+                    <p class="text-xs text-slate-400 mb-4">Klik baris provinsi untuk melihat detail tamu & opsi WhatsApp Blast.</p>
                     <div class="overflow-x-auto max-h-72 overflow-y-auto">
                         <table class="w-full text-left border-collapse">
                             <thead class="sticky top-0 bg-slate-50">
@@ -172,10 +166,15 @@
                 </div>
             </div>
 
-            <div id="guestDetailContainer" class="bg-white p-6 rounded-xl shadow-sm border border-indigo-100">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 id="guestDetailTitle" class="font-bold text-slate-800 text-base"><i class="fa-solid fa-users-viewfinder text-indigo-600 mr-2"></i>Detail Tamu per Wilayah</h3>
-                    <span id="guestDetailFilterInfo" class="text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-medium">Semua Kota/Provinsi pada Periode Ini</span>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-indigo-100 space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                    <h3 id="guestDetailTitle" class="font-bold text-slate-800 text-base"><i class="fa-solid fa-users-viewfinder text-indigo-600 mr-2"></i>Detail Tamu & WhatsApp Blast</h3>
+                    <div class="flex items-center gap-2">
+                        <span id="guestDetailFilterInfo" class="text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-medium">Semua Tamu Periode Ini</span>
+                        <button onclick="openWaBlastModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center shadow-sm">
+                            <i class="fa-brands fa-whatsapp mr-1.5 text-base"></i> Buat Pesan WA Blast
+                        </button>
+                    </div>
                 </div>
                 <div class="overflow-x-auto max-h-80 overflow-y-auto">
                     <table class="w-full text-left border-collapse">
@@ -186,6 +185,7 @@
                                 <th class="py-2.5 px-3">Provinsi Asal</th>
                                 <th class="py-2.5 px-3">Tanggal</th>
                                 <th class="py-2.5 px-3">No WhatsApp</th>
+                                <th class="py-2.5 px-3 text-center">Aksi WA</th>
                             </tr>
                         </thead>
                         <tbody id="dashboardDetailGuestsBody" class="text-sm divide-y divide-slate-50"></tbody>
@@ -195,7 +195,7 @@
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-chart-line text-blue-600 mr-2"></i>Akumulasi MTD Comset (Month-to-Date)</h3>
+                    <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-chart-line text-blue-600 mr-2"></i>Akumulasi Performa Comset</h3>
                     <span id="mtdSubtitlePeriod" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md font-medium">Periode Terpilih</span>
                 </div>
                 <div class="overflow-x-auto">
@@ -243,7 +243,7 @@
                                 <th class="py-3 px-4">Nama Tamu</th>
                                 <th class="py-3 px-4">Kota</th>
                                 <th class="py-3 px-4">Provinsi</th>
-                                <th class="py-3 px-4">Tanggal Check-In / Lahir</th>
+                                <th class="py-3 px-4">Tanggal Check-In</th>
                                 <th class="py-3 px-4">No WhatsApp</th>
                                 <th class="py-3 px-4 text-center">Aksi</th>
                             </tr>
@@ -260,21 +260,9 @@
                     <h2 class="text-xl font-bold text-slate-800">Manajemen Data Comset</h2>
                     <p class="text-sm text-slate-500">Input dan edit data performa harian hotel Anda dan kompetitor</p>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="generateAiPromoIdeas()" class="bg-violet-600 hover:bg-violet-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center shadow-sm">
-                        <i class="fa-solid fa-wand-magic-sparkles mr-2 text-amber-300"></i> ✨ Ide Promo AI
-                    </button>
-                    <button onclick="openComsetModal('add')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center shadow-sm">
-                        <i class="fa-solid fa-plus mr-2"></i> Input Data Harian Comset
-                    </button>
-                </div>
-            </div>
-            <div id="aiPromoBox" class="hidden bg-gradient-to-br from-violet-900 to-indigo-950 text-white p-6 rounded-2xl shadow-lg border border-violet-700">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-bold text-base"><i class="fa-solid fa-lightbulb text-amber-400 mr-2"></i> Strategi & Ide Paket Kamar Pintar</h3>
-                    <button onclick="document.getElementById('aiPromoBox').classList.add('hidden')" class="text-violet-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-                </div>
-                <div id="aiPromoContent" class="text-sm text-violet-100 leading-relaxed whitespace-pre-line">Menyusun rekomendasi promo...</div>
+                <button onclick="openComsetModal('add')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center shadow-sm">
+                    <i class="fa-solid fa-plus mr-2"></i> Input Data Harian Comset
+                </button>
             </div>
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="p-4 border-b border-slate-100">
@@ -303,7 +291,7 @@
         <section id="tab-settings" class="tab-content hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 max-w-2xl mx-auto space-y-6">
                 <div class="border-b border-slate-100 pb-4">
-                    <h2 class="text-xl font-bold text-slate-800">Pengaturan Profil Hotel & Web App</h2>
+                    <h2 class="text-xl font-bold text-slate-800">Pengaturan Profil Hotel</h2>
                     <p class="text-sm text-slate-500">Kelola informasi hotel utama dan daftar hotel kompetitor (Comset)</p>
                 </div>
                 <form id="settingForm" onsubmit="saveHotelSettings(event)" class="space-y-4">
@@ -344,6 +332,38 @@
 
     </main>
 
+    <div id="waBlastModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full overflow-hidden">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="font-bold text-slate-800 text-base"><i class="fa-brands fa-whatsapp text-emerald-600 mr-2 text-lg"></i>Generator Pesan WhatsApp Blast</h3>
+                <button onclick="closeWaBlastModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Pilih Template Pesan Promo</label>
+                    <select id="waTemplateSelect" onchange="updateWaTemplate()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
+                        <option value="promo">Promo Khusus Weekend / Liburan</option>
+                        <option value="repeat">Sapaan Tamu Kembali (Repeat Order)</option>
+                        <option value="greeting">Ucapan Spesial / Selamat Datang</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Isi Pesan (Gunakan [Nama] untuk sapaan otomatis)</label>
+                    <textarea id="waMessageText" rows="5" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-lg text-xs text-slate-500">
+                    Target: <span id="waTargetCount" class="font-semibold text-slate-700">0 Nomor</span> dalam daftar terpilih saat ini.
+                </div>
+                <div class="pt-2 flex justify-end space-x-2">
+                    <button type="button" onclick="closeWaBlastModal()" class="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600">Batal</button>
+                    <button type="button" onclick="executeWaBlast()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium flex items-center">
+                        <i class="fa-brands fa-whatsapp mr-1.5 text-base"></i> Kirim WhatsApp Massal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="guestModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
@@ -368,7 +388,7 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Tanggal Check-In / Lahir</label>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Tanggal Check-In</label>
                         <input type="date" id="guestDob" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-500">
                     </div>
                     <div>
@@ -424,7 +444,6 @@
 
     <script>
         const apiKey = "";
-        // Link Google Script Anda sudah ditanam otomatis di sini:
         let scriptUrl = "https://script.google.com/macros/s/AKfycbzLGDZZw2CpkXNqXsULFepvz9GDrvrhjCNAfyZoz6_VGtdralt6oYNlwjj56pKIVHv8/exec";
 
         let hotelSettings = JSON.parse(localStorage.getItem('hotelSettings')) || {
@@ -450,6 +469,9 @@
             { id: 2, date: "2026-06-01", hotelName: "Hotel Santika Premiere", roomAvail: 120, roomSold: 90, arr: 1100000 }
         ];
 
+        let activeRegionFilter = null;
+        let currentFilteredGuests = [];
+
         window.onload = function() {
             applyHotelSettingsToUI();
             
@@ -462,12 +484,21 @@
 
             switchTab('dashboard');
             document.getElementById('comsetDate').valueAsDate = new Date();
-            
-            // Otomatis ambil data dari Google Sheets saat pertama kali dibuka
             if(scriptUrl) {
                 syncWithGoogleSheet();
             }
         };
+
+        function toggleFilterMode() {
+            const mode = document.getElementById('filterMode').value;
+            const monthContainer = document.getElementById('monthContainer');
+            if(mode === 'mtd') {
+                monthContainer.classList.remove('hidden');
+            } else {
+                monthContainer.classList.add('hidden');
+            }
+            renderDashboard();
+        }
 
         async function syncWithGoogleSheet() {
             if(!scriptUrl) return;
@@ -599,41 +630,8 @@
             
             applyHotelSettingsToUI();
             saveDataToCloud('saveSettings');
-            alert('Pengaturan dan daftar hotel berhasil disimpan serta disinkronkan ke cloud!');
+            alert('Pengaturan berhasil disimpan!');
             switchTab('dashboard');
-        }
-
-        async function callGeminiApi(systemPrompt, userQuery) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const result = await response.json();
-            return result.candidates?.[0]?.content?.parts?.[0]?.text || "Gagal memuat respons AI.";
-        }
-
-        async function generateAiRevenueInsights() {
-            const box = document.getElementById('aiInsightBox');
-            const content = document.getElementById('aiInsightContent');
-            box.classList.remove('hidden');
-            content.innerText = "⏳ Gemini AI sedang menganalisis data...";
-            const res = await callGeminiApi("Pakar Revenue Management hotel.", `Analisis hotel ${hotelSettings.name} dengan ${guests.length} tamu.`);
-            content.innerText = res;
-        }
-
-        async function generateAiPromoIdeas() {
-            const box = document.getElementById('aiPromoBox');
-            const content = document.getElementById('aiPromoContent');
-            box.classList.remove('hidden');
-            content.innerText = "⏳ Menyusun rekomendasi promo...";
-            const res = await callGeminiApi("Konsultan pemasaran hotel.", `Berikan ide promo untuk ${hotelSettings.name}.`);
-            content.innerText = res;
         }
 
         function renderGuestsTable() {
@@ -707,9 +705,7 @@
             renderDashboard();
         }
 
-        function editGuest(id) {
-            openGuestModal('edit', id);
-        }
+        function editGuest(id) { openGuestModal('edit', id); }
 
         function deleteGuest(id) {
             if(confirm('Hapus tamu?')) {
@@ -772,9 +768,7 @@
             renderDashboard();
         }
 
-        function editComsetLog(id) {
-            openComsetModal('edit', id);
-        }
+        function editComsetLog(id) { openComsetModal('edit', id); }
 
         function deleteComsetLog(id) {
             if(confirm('Hapus log comset?')) {
@@ -805,15 +799,75 @@
             `).join('');
         }
 
+        // --- FITUR WHATSAPP BLAST ---
+        function openWaBlastModal() {
+            if(!currentFilteredGuests || currentFilteredGuests.length === 0) {
+                alert("Tidak ada daftar nomor tamu pada filter saat ini!");
+                return;
+            }
+            document.getElementById('waBlastModal').classList.remove('hidden');
+            document.getElementById('waTargetCount').innerText = `${currentFilteredGuests.length} Nomor`;
+            updateWaTemplate();
+        }
+
+        function closeWaBlastModal() {
+            document.getElementById('waBlastModal').classList.add('hidden');
+        }
+
+        function updateWaTemplate() {
+            const type = document.getElementById('waTemplateSelect').value;
+            let text = "";
+            if(type === 'promo') {
+                text = `Halo Kak [Nama],\n\nNikmati liburan seru di ${hotelSettings.name} dengan penawaran spesial minggu ini! Dapatkan diskon kamar eksklusif dan sarapan gratis.\n\nPesan sekarang melalui ${hotelSettings.phone}. Kami tunggu kedatangannya! ✨`;
+            } else if(type === 'repeat') {
+                text = `Halo Kak [Nama],\n\nTerima kasih telah menginap di ${hotelSettings.name} sebelumnya. Kami rindu kehadiran Anda kembali! Dapatkan potongan harga khusus member untuk kunjungan Anda berikutnya di kota kami.\n\nHubungi kami di ${hotelSettings.phone} 🏨`;
+            } else if(type === 'greeting') {
+                text = `Halo Kak [Nama],\n\nSemoga hari Anda menyenangkan! Salam hangat dari seluruh staf ${hotelSettings.name}. Jika Anda merencanakan kunjungan ke kota kami, percayakan kenyamanan menginap Anda bersama kami. 🙏`;
+            }
+            document.getElementById('waMessageText').value = text;
+        }
+
+        function executeWaBlast() {
+            const templateText = document.getElementById('waMessageText').value;
+            if(!templateText) {
+                alert("Pesan tidak boleh kosong!");
+                return;
+            }
+
+            let validPhones = currentFilteredGuests.filter(g => g.phone && g.phone.length >= 10);
+            if(validPhones.length === 0) {
+                alert("Nomor telepon tamu tidak valid.");
+                return;
+            }
+
+            let target = validPhones[0];
+            let formattedPhone = target.phone.replace(/^0/, '62');
+            let personalizedMsg = templateText.replace(/\[Nama\]/g, target.name);
+            
+            let waUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(personalizedMsg)}`;
+            window.open(waUrl, '_blank');
+            
+            alert(`Membuka WhatsApp untuk ${target.name} (${target.phone}). Anda juga dapat mengirimkan ke tamu lainnya dari tabel detail.`);
+        }
+
+        function sendSingleWa(name, phone) {
+            let formattedPhone = phone.replace(/^0/, '62');
+            let msg = `Halo Kak ${name},\n\nTerima kasih telah menjadi bagian dari ${hotelSettings.name}. Salam hangat untuk Anda dan keluarga!`;
+            window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
         function filterGuestsByRegion(type, name) {
             activeRegionFilter = { type, name };
+            const filterMode = document.getElementById('filterMode').value;
             const selectedMonth = document.getElementById('filterMonth').value;
             const selectedYear = document.getElementById('filterYear').value;
 
-            const filteredGuests = guests.filter(g => {
+            currentFilteredGuests = guests.filter(g => {
                 if(!g.dob) return false;
                 const [year, month] = g.dob.split('-');
-                if(year !== selectedYear || month !== selectedMonth) return false;
+                if(filterMode === 'mtd' && (year !== selectedYear || month !== selectedMonth)) return false;
+                if(filterMode === 'ytd' && year !== selectedYear) return false;
+                
                 if(type === 'city') return g.city.toLowerCase() === name.toLowerCase();
                 if(type === 'province') return g.province.toLowerCase() === name.toLowerCase();
                 return true;
@@ -821,27 +875,34 @@
 
             document.getElementById('guestDetailTitle').innerHTML = `<i class="fa-solid fa-users-viewfinder text-indigo-600 mr-2"></i>Detail Tamu Asal ${type === 'city' ? 'Kota' : 'Provinsi'}: <span class="text-indigo-600">${name}</span>`;
             document.getElementById('guestDetailFilterInfo').innerHTML = `<button onclick="resetRegionFilter()" class="text-rose-600 hover:underline"><i class="fa-solid fa-xmark mr-1"></i>Reset Filter</button>`;
-            
-            const detailGuestsBody = document.getElementById('dashboardDetailGuestsBody');
-            detailGuestsBody.innerHTML = filteredGuests.map(g => `
-                <tr class="border-b border-slate-50 hover:bg-slate-50">
-                    <td class="py-2.5 px-3 font-medium text-slate-800">${g.name}</td>
-                    <td class="py-2.5 px-3 text-slate-600">${g.city}</td>
-                    <td class="py-2.5 px-3 text-slate-600">${g.province}</td>
-                    <td class="py-2.5 px-3 text-slate-500 text-xs">${g.dob}</td>
-                    <td class="py-2.5 px-3 text-slate-600">${g.phone}</td>
-                </tr>
-            `).join('') || `<tr><td colspan="5" class="py-4 text-center text-slate-400">Tidak ada data tamu untuk ${name} pada periode ini</td></tr>`;
+            renderDashboardGuestsTable();
         }
-
-        let activeRegionFilter = null;
 
         function resetRegionFilter() {
             activeRegionFilter = null;
             renderDashboard();
         }
 
+        function renderDashboardGuestsTable() {
+            const detailGuestsBody = document.getElementById('dashboardDetailGuestsBody');
+            detailGuestsBody.innerHTML = currentFilteredGuests.map(g => `
+                <tr class="border-b border-slate-50 hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-medium text-slate-800">${g.name}</td>
+                    <td class="py-2.5 px-3 text-slate-600">${g.city}</td>
+                    <td class="py-2.5 px-3 text-slate-600">${g.province}</td>
+                    <td class="py-2.5 px-3 text-slate-500 text-xs">${g.dob}</td>
+                    <td class="py-2.5 px-3 text-slate-600">${g.phone}</td>
+                    <td class="py-2.5 px-3 text-center">
+                        <button onclick="sendSingleWa('${g.name}', '${g.phone}')" class="bg-emerald-50 text-emerald-600 hover:bg-emerald-100 px-2.5 py-1 rounded-md text-xs font-semibold transition" title="Kirim WA">
+                            <i class="fa-brands fa-whatsapp text-sm"></i> Chat
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="6" class="py-4 text-center text-slate-400">Tidak ada data tamu pada filter ini</td></tr>`;
+        }
+
         function renderDashboard() {
+            const filterMode = document.getElementById('filterMode').value;
             const selectedMonth = document.getElementById('filterMonth').value;
             const selectedYear = document.getElementById('filterYear').value;
 
@@ -850,21 +911,28 @@
                 "05": "Mei", "06": "Juni", "07": "Juli", "08": "Agustus",
                 "09": "September", "10": "Oktober", "11": "November", "12": "Desember"
             };
-            document.getElementById('mtdSubtitlePeriod').innerText = `Periode: ${monthNames[selectedMonth]} ${selectedYear}`;
 
-            const filteredGuests = guests.filter(g => {
+            if(filterMode === 'ytd') {
+                document.getElementById('mtdSubtitlePeriod').innerText = `Periode YTD: Tahun ${selectedYear} (1 Tahun Penuh)`;
+            } else {
+                document.getElementById('mtdSubtitlePeriod').innerText = `Periode MTD: ${monthNames[selectedMonth]} ${selectedYear}`;
+            }
+
+            // Filter Tamu YTD / MTD
+            currentFilteredGuests = guests.filter(g => {
                 if(!g.dob) return false;
                 const [year, month] = g.dob.split('-');
+                if(filterMode === 'ytd') return year === selectedYear;
                 return year === selectedYear && month === selectedMonth;
             });
 
             let cityCounts = {}, provinceCounts = {};
-            filteredGuests.forEach(g => {
+            currentFilteredGuests.forEach(g => {
                 cityCounts[g.city] = (cityCounts[g.city] || 0) + 1;
                 provinceCounts[g.province] = (provinceCounts[g.province] || 0) + 1;
             });
 
-            document.getElementById('statTotalGuests').innerText = filteredGuests.length;
+            document.getElementById('statTotalGuests').innerText = currentFilteredGuests.length;
             document.getElementById('statTotalCities').innerText = Object.keys(cityCounts).length;
             document.getElementById('statTotalProvinces').innerText = Object.keys(provinceCounts).length;
 
@@ -887,26 +955,18 @@
             `).join('') || `<tr><td colspan="3" class="py-4 text-center text-slate-400">Belum ada data</td></tr>`;
 
             if(!activeRegionFilter) {
-                document.getElementById('guestDetailTitle').innerHTML = `<i class="fa-solid fa-list-check text-indigo-600 mr-2"></i>Detail Seluruh Tamu (Berdasarkan Periode)`;
-                document.getElementById('guestDetailFilterInfo').innerText = `Total: ${filteredGuests.length} Tamu`;
-                
-                const detailGuestsBody = document.getElementById('dashboardDetailGuestsBody');
-                detailGuestsBody.innerHTML = filteredGuests.map(g => `
-                    <tr class="border-b border-slate-50 hover:bg-slate-50">
-                        <td class="py-2.5 px-3 font-medium text-slate-800">${g.name}</td>
-                        <td class="py-2.5 px-3 text-slate-600">${g.city}</td>
-                        <td class="py-2.5 px-3 text-slate-600">${g.province}</td>
-                        <td class="py-2.5 px-3 text-slate-500 text-xs">${g.dob}</td>
-                        <td class="py-2.5 px-3 text-slate-600">${g.phone}</td>
-                    </tr>
-                `).join('') || `<tr><td colspan="5" class="py-4 text-center text-slate-400">Tidak ada data tamu pada periode ini</td></tr>`;
+                document.getElementById('guestDetailTitle').innerHTML = `<i class="fa-solid fa-list-check text-indigo-600 mr-2"></i>Detail Seluruh Tamu (${filterMode === 'ytd' ? 'YTD ' + selectedYear : monthNames[selectedMonth] + ' ' + selectedYear})`;
+                document.getElementById('guestDetailFilterInfo').innerText = `Total: ${currentFilteredGuests.length} Tamu`;
+                renderDashboardGuestsTable();
             } else {
                 filterGuestsByRegion(activeRegionFilter.type, activeRegionFilter.name);
             }
 
+            // Filter Comset YTD / MTD
             const filteredLogs = dailyComsetLogs.filter(l => {
                 if(!l.date) return false;
                 const [year, month] = l.date.split('-');
+                if(filterMode === 'ytd') return year === selectedYear;
                 return year === selectedYear && month === selectedMonth;
             });
 
