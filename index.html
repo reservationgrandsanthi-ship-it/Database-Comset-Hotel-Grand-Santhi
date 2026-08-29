@@ -54,19 +54,22 @@
 
         <!-- TAB 1: DASHBOARD -->
         <section id="tab-dashboard" class="tab-content space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                 <div>
                     <h2 class="text-xl font-bold text-slate-800">Dashboard Utama</h2>
-                    <p class="text-sm text-slate-500">Ringkasan data tamu dan Comset (MTD & YTD)</p>
+                    <p class="text-sm text-slate-500">Ringkasan data tamu dan Comset (MTD, YTD, & Date-to-Date)</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-3">
                     <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-sm">
                         <label for="filterMode" class="text-xs font-semibold text-slate-500 uppercase">Mode:</label>
                         <select id="filterMode" onchange="toggleFilterMode()" class="bg-transparent font-medium text-slate-700 focus:outline-none">
                             <option value="mtd">Bulanan (MTD)</option>
-                            <option value="ytd" selected>Tahunan (YTD)</option>
+                            <option value="ytd">Tahunan (YTD)</option>
+                            <option value="custom" selected>Date-to-Date</option>
                         </select>
                     </div>
+
+                    <!-- Month Selection Container -->
                     <div id="monthContainer" class="hidden flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-sm">
                         <label for="filterMonth" class="text-xs font-semibold text-slate-500 uppercase">Bulan:</label>
                         <select id="filterMonth" onchange="renderDashboard()" class="bg-transparent font-medium text-slate-700 focus:outline-none">
@@ -84,7 +87,9 @@
                             <option value="12">Desember</option>
                         </select>
                     </div>
-                    <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-sm">
+
+                    <!-- Year Selection Container -->
+                    <div id="yearContainer" class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-sm">
                         <label for="filterYear" class="text-xs font-semibold text-slate-500 uppercase">Tahun:</label>
                         <select id="filterYear" onchange="renderDashboard()" class="bg-transparent font-medium text-slate-700 focus:outline-none">
                             <option value="2024">2024</option>
@@ -92,6 +97,14 @@
                             <option value="2026" selected>2026</option>
                             <option value="2027">2027</option>
                         </select>
+                    </div>
+
+                    <!-- Custom Date-to-Date Range Container -->
+                    <div id="customDateContainer" class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-sm">
+                        <span class="text-xs font-semibold text-slate-500 uppercase">Dari:</span>
+                        <input type="date" id="filterStartDate" onchange="renderDashboard()" class="bg-transparent font-medium text-slate-700 focus:outline-none text-xs">
+                        <span class="text-xs font-semibold text-slate-500 uppercase">s/d:</span>
+                        <input type="date" id="filterEndDate" onchange="renderDashboard()" class="bg-transparent font-medium text-slate-700 focus:outline-none text-xs">
                     </div>
                 </div>
             </div>
@@ -137,7 +150,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                    <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-trophy text-amber-500 mr-2"></i>10 Besar Kota Tamu</h3>
+                    <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-trophy text-amber-500 mr-2"></i>Daftar Kota Tamu</h3>
                     <p class="text-xs text-slate-400 mb-4">Klik baris kota untuk melihat detail tamu & opsi WhatsApp Blast.</p>
                     <div class="overflow-x-auto max-h-72 overflow-y-auto">
                         <table class="w-full text-left border-collapse">
@@ -154,7 +167,7 @@
                 </div>
 
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                    <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-award text-emerald-700 mr-2"></i>10 Besar Provinsi Tamu</h3>
+                    <h3 class="font-bold text-slate-800 text-base mb-2"><i class="fa-solid fa-award text-emerald-700 mr-2"></i>Daftar Provinsi Tamu</h3>
                     <p class="text-xs text-slate-400 mb-4">Klik baris provinsi untuk melihat detail tamu & opsi WhatsApp Blast.</p>
                     <div class="overflow-x-auto max-h-72 overflow-y-auto">
                         <table class="w-full text-left border-collapse">
@@ -464,21 +477,12 @@
         };
 
         let comsetHotelsList = JSON.parse(localStorage.getItem('comsetHotelsList')) || [
-            hotelSettings.name,
-            "Hotel Santika Premiere",
-            "Aston Hotel & Convention",
-            "Swiss-Belhotel Internasional"
+            hotelSettings.name
         ];
 
-        let guests = JSON.parse(localStorage.getItem('hotelGuests')) || [
-            { id: 1, name: "Budi Santoso", city: "Jakarta", province: "DKI Jakarta", dob: "2026-06-05", phone: "081234567890" },
-            { id: 2, name: "Siti Rahma", city: "Surabaya", province: "Jawa Timur", dob: "2026-06-12", phone: "081987654321" }
-        ];
+        let guests = JSON.parse(localStorage.getItem('hotelGuests')) || [];
 
-        let dailyComsetLogs = JSON.parse(localStorage.getItem('dailyComsetLogs')) || [
-            { id: 1, date: "2026-06-01", hotelName: hotelSettings.name, roomAvail: 100, roomSold: 75, arr: 1000000 },
-            { id: 2, date: "2026-06-01", hotelName: "Hotel Santika Premiere", roomAvail: 120, roomSold: 90, arr: 1100000 }
-        ];
+        let dailyComsetLogs = JSON.parse(localStorage.getItem('dailyComsetLogs')) || [];
 
         let activeRegionFilter = null;
         let currentFilteredGuests = [];
@@ -492,12 +496,17 @@
             applyHotelSettingsToUI();
             
             const now = new Date();
+            const currYear = now.getFullYear();
             const currMonth = String(now.getMonth() + 1).padStart(2, '0');
-            const currYear = String(now.getFullYear());
+            const todayStr = now.toISOString().split('T')[0];
+            const firstDayOfMonthStr = `${currYear}-${currMonth}-01`;
             
             document.getElementById('filterMonth').value = currMonth;
             document.getElementById('filterYear').value = currYear;
+            document.getElementById('filterStartDate').value = firstDayOfMonthStr;
+            document.getElementById('filterEndDate').value = todayStr;
 
+            toggleFilterMode();
             switchTab('dashboard');
             document.getElementById('comsetDate').valueAsDate = new Date();
             if(scriptUrl) {
@@ -508,10 +517,20 @@
         function toggleFilterMode() {
             const mode = document.getElementById('filterMode').value;
             const monthContainer = document.getElementById('monthContainer');
+            const yearContainer = document.getElementById('yearContainer');
+            const customDateContainer = document.getElementById('customDateContainer');
+
+            monthContainer.classList.add('hidden');
+            yearContainer.classList.add('hidden');
+            customDateContainer.classList.add('hidden');
+
             if(mode === 'mtd') {
                 monthContainer.classList.remove('hidden');
-            } else {
-                monthContainer.classList.add('hidden');
+                yearContainer.classList.remove('hidden');
+            } else if(mode === 'ytd') {
+                yearContainer.classList.remove('hidden');
+            } else if(mode === 'custom') {
+                customDateContainer.classList.remove('hidden');
             }
             renderDashboard();
         }
@@ -942,12 +961,21 @@
             const filterMode = document.getElementById('filterMode').value;
             const selectedMonth = document.getElementById('filterMonth').value;
             const selectedYear = document.getElementById('filterYear').value;
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
 
             currentFilteredGuests = guests.filter(g => {
                 if(!g.dob) return false;
-                const [year, month] = g.dob.split('-');
-                if(filterMode === 'mtd' && (year !== selectedYear || month !== selectedMonth)) return false;
-                if(filterMode === 'ytd' && year !== selectedYear) return false;
+                if(filterMode === 'mtd') {
+                    const [year, month] = g.dob.split('-');
+                    if(year !== selectedYear || month !== selectedMonth) return false;
+                } else if(filterMode === 'ytd') {
+                    const [year] = g.dob.split('-');
+                    if(year !== selectedYear) return false;
+                } else if(filterMode === 'custom') {
+                    if(startDate && g.dob < startDate) return false;
+                    if(endDate && g.dob > endDate) return false;
+                }
                 
                 if(type === 'city') return g.city.toLowerCase() === name.toLowerCase();
                 if(type === 'province') return g.province.toLowerCase() === name.toLowerCase();
@@ -986,6 +1014,8 @@
             const filterMode = document.getElementById('filterMode').value;
             const selectedMonth = document.getElementById('filterMonth').value;
             const selectedYear = document.getElementById('filterYear').value;
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
 
             const monthNames = {
                 "01": "Januari", "02": "Februari", "03": "Maret", "04": "April",
@@ -995,15 +1025,25 @@
 
             if(filterMode === 'ytd') {
                 document.getElementById('mtdSubtitlePeriod').innerText = `Periode YTD: Tahun ${selectedYear} (1 Tahun Penuh)`;
-            } else {
+            } else if(filterMode === 'mtd') {
                 document.getElementById('mtdSubtitlePeriod').innerText = `Periode MTD: ${monthNames[selectedMonth]} ${selectedYear}`;
+            } else {
+                document.getElementById('mtdSubtitlePeriod').innerText = `Periode: ${startDate || 'Awal'} s/d ${endDate || 'Akhir'}`;
             }
 
             currentFilteredGuests = guests.filter(g => {
                 if(!g.dob) return false;
-                const [year, month] = g.dob.split('-');
-                if(filterMode === 'ytd') return year === selectedYear;
-                return year === selectedYear && month === selectedMonth;
+                if(filterMode === 'mtd') {
+                    const [year, month] = g.dob.split('-');
+                    return year === selectedYear && month === selectedMonth;
+                } else if(filterMode === 'ytd') {
+                    const [year] = g.dob.split('-');
+                    return year === selectedYear;
+                } else if(filterMode === 'custom') {
+                    if(startDate && g.dob < startDate) return false;
+                    if(endDate && g.dob > endDate) return false;
+                    return true;
+                }
             });
 
             let cityCounts = {}, provinceCounts = {};
@@ -1016,8 +1056,8 @@
             document.getElementById('statTotalCities').innerText = Object.keys(cityCounts).length;
             document.getElementById('statTotalProvinces').innerText = Object.keys(provinceCounts).length;
 
-            const topCities = Object.entries(cityCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
-            document.getElementById('topCitiesTableBody').innerHTML = topCities.map(([city, count], idx) => `
+            const allCities = Object.entries(cityCounts).sort((a,b) => b[1]-a[1]);
+            document.getElementById('topCitiesTableBody').innerHTML = allCities.map(([city, count], idx) => `
                 <tr onclick="filterGuestsByRegion('city', '${city}')" class="border-b border-slate-50 cursor-pointer hover:bg-amber-50/50 transition">
                     <td class="py-2.5 px-3 font-semibold text-amber-700">#${idx+1}</td>
                     <td class="py-2.5 px-3 font-medium text-slate-700 underline decoration-amber-300">${city}</td>
@@ -1025,8 +1065,8 @@
                 </tr>
             `).join('') || `<tr><td colspan="3" class="py-4 text-center text-slate-400">Belum ada data</td></tr>`;
 
-            const topProvs = Object.entries(provinceCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
-            document.getElementById('topProvincesTableBody').innerHTML = topProvs.map(([prov, count], idx) => `
+            const allProvs = Object.entries(provinceCounts).sort((a,b) => b[1]-a[1]);
+            document.getElementById('topProvincesTableBody').innerHTML = allProvs.map(([prov, count], idx) => `
                 <tr onclick="filterGuestsByRegion('province', '${prov}')" class="border-b border-slate-50 cursor-pointer hover:bg-amber-50/50 transition">
                     <td class="py-2.5 px-3 font-semibold text-amber-700">#${idx+1}</td>
                     <td class="py-2.5 px-3 font-medium text-slate-700 underline decoration-amber-300">${prov}</td>
@@ -1035,7 +1075,13 @@
             `).join('') || `<tr><td colspan="3" class="py-4 text-center text-slate-400">Belum ada data</td></tr>`;
 
             if(!activeRegionFilter) {
-                document.getElementById('guestDetailTitle').innerHTML = `<i class="fa-solid fa-list-check text-amber-700 mr-2"></i>Detail Seluruh Tamu (${filterMode === 'ytd' ? 'YTD ' + selectedYear : monthNames[selectedMonth] + ' ' + selectedYear})`;
+                if(filterMode === 'mtd') {
+                    document.getElementById('guestDetailTitle').innerHTML = `<i class="fa-solid fa-list-check text-amber-700 mr-2"></i>Detail Seluruh Tamu (${monthNames[selectedMonth]} ${selectedYear})`;
+                } else if(filterMode === 'ytd') {
+                    document.getElementById('guestDetailTitle').innerHTML = `<i class="fa-solid fa-list-check text-amber-700 mr-2"></i>Detail Seluruh Tamu (YTD ${selectedYear})`;
+                } else {
+                    document.getElementById('guestDetailTitle').innerHTML = `<i class="fa-solid fa-list-check text-amber-700 mr-2"></i>Detail Seluruh Tamu (${startDate} s/d ${endDate})`;
+                }
                 document.getElementById('guestDetailFilterInfo').innerText = `Total: ${currentFilteredGuests.length} Tamu`;
                 renderDashboardGuestsTable();
             } else {
@@ -1044,9 +1090,17 @@
 
             const filteredLogs = dailyComsetLogs.filter(l => {
                 if(!l.date) return false;
-                const [year, month] = l.date.split('-');
-                if(filterMode === 'ytd') return year === selectedYear;
-                return year === selectedYear && month === selectedMonth;
+                if(filterMode === 'mtd') {
+                    const [year, month] = l.date.split('-');
+                    return year === selectedYear && month === selectedMonth;
+                } else if(filterMode === 'ytd') {
+                    const [year] = l.date.split('-');
+                    return year === selectedYear;
+                } else if(filterMode === 'custom') {
+                    if(startDate && l.date < startDate) return false;
+                    if(endDate && l.date > endDate) return false;
+                    return true;
+                }
             });
 
             let mtdMap = {};
