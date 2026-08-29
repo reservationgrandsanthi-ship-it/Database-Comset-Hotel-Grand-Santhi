@@ -483,6 +483,11 @@
         let activeRegionFilter = null;
         let currentFilteredGuests = [];
 
+        // Pagination State
+        let currentGuestPage = 1;
+        let currentComsetPage = 1;
+        const rowsPerPage = 100;
+
         window.onload = function() {
             applyHotelSettingsToUI();
             
@@ -649,9 +654,16 @@
             const tbody = document.getElementById('guestsTableBody');
             const keyword = document.getElementById('searchGuestInput').value.toLowerCase();
             tbody.innerHTML = '';
+            
             const filtered = guests.filter(g => g.name.toLowerCase().includes(keyword) || g.city.toLowerCase().includes(keyword));
             
-            filtered.forEach(g => {
+            const totalPages = Math.ceil(filtered.length / rowsPerPage) || 1;
+            if (currentGuestPage > totalPages) currentGuestPage = totalPages;
+            
+            const start = (currentGuestPage - 1) * rowsPerPage;
+            const paginatedItems = filtered.slice(start, start + rowsPerPage);
+            
+            paginatedItems.forEach(g => {
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50 border-b border-slate-50">
                         <td class="py-3 px-4 font-medium">${g.name}</td>
@@ -666,6 +678,32 @@
                     </tr>
                 `;
             });
+
+            renderGuestPaginationControls(filtered.length, totalPages);
+        }
+
+        function renderGuestPaginationControls(totalItems, totalPages) {
+            let paginationContainer = document.getElementById('guestPaginationContainer');
+            if (!paginationContainer) {
+                paginationContainer = document.createElement('div');
+                paginationContainer.id = 'guestPaginationContainer';
+                paginationContainer.className = "p-4 border-t border-slate-100 flex justify-between items-center text-sm text-slate-600";
+                document.querySelector('#tab-guests .bg-white.rounded-xl').appendChild(paginationContainer);
+            }
+            
+            paginationContainer.innerHTML = `
+                <span>Menampilkan ${totalItems === 0 ? 0 : (currentGuestPage - 1) * rowsPerPage + 1} - ${Math.min(currentGuestPage * rowsPerPage, totalItems)} dari ${totalItems} data</span>
+                <div class="space-x-1">
+                    <button onclick="changeGuestPage(${currentGuestPage - 1})" ${currentGuestPage === 1 ? 'disabled class="opacity-50 cursor-not-allowed px-3 py-1 border rounded"' : 'class="px-3 py-1 border rounded hover:bg-slate-50"'}>Sebelumnya</button>
+                    <span class="px-2">Hal ${currentGuestPage} dari ${totalPages}</span>
+                    <button onclick="changeGuestPage(${currentGuestPage + 1})" ${currentGuestPage >= totalPages ? 'disabled class="opacity-50 cursor-not-allowed px-3 py-1 border rounded"' : 'class="px-3 py-1 border rounded hover:bg-slate-50"'}>Berikutnya</button>
+                </div>
+            `;
+        }
+
+        function changeGuestPage(page) {
+            currentGuestPage = page;
+            renderGuestsTable();
         }
 
         function openGuestModal(mode, id = null) {
@@ -793,7 +831,13 @@
 
         function renderDailyComsetTable() {
             const tbody = document.getElementById('dailyComsetTableBody');
-            tbody.innerHTML = dailyComsetLogs.map(c => `
+            const totalPages = Math.ceil(dailyComsetLogs.length / rowsPerPage) || 1;
+            if (currentComsetPage > totalPages) currentComsetPage = totalPages;
+            
+            const start = (currentComsetPage - 1) * rowsPerPage;
+            const paginatedItems = dailyComsetLogs.slice(start, start + rowsPerPage);
+            
+            tbody.innerHTML = paginatedItems.map(c => `
                 <tr class="hover:bg-slate-50 border-b border-slate-50">
                     <td class="py-3 px-3 text-slate-600">${c.date}</td>
                     <td class="py-3 px-3 font-medium">${c.hotelName}</td>
@@ -808,6 +852,32 @@
                     </td>
                 </tr>
             `).join('');
+
+            renderComsetPaginationControls(dailyComsetLogs.length, totalPages);
+        }
+
+        function renderComsetPaginationControls(totalItems, totalPages) {
+            let paginationContainer = document.getElementById('comsetPaginationContainer');
+            if (!paginationContainer) {
+                paginationContainer = document.createElement('div');
+                paginationContainer.id = 'comsetPaginationContainer';
+                paginationContainer.className = "p-4 border-t border-slate-100 flex justify-between items-center text-sm text-slate-600";
+                document.querySelector('#tab-comset .bg-white.rounded-xl').appendChild(paginationContainer);
+            }
+            
+            paginationContainer.innerHTML = `
+                <span>Menampilkan ${totalItems === 0 ? 0 : (currentComsetPage - 1) * rowsPerPage + 1} - ${Math.min(currentComsetPage * rowsPerPage, totalItems)} dari ${totalItems} data</span>
+                <div class="space-x-1">
+                    <button onclick="changeComsetPage(${currentComsetPage - 1})" ${currentComsetPage === 1 ? 'disabled class="opacity-50 cursor-not-allowed px-3 py-1 border rounded"' : 'class="px-3 py-1 border rounded hover:bg-slate-50"'}>Sebelumnya</button>
+                    <span class="px-2">Hal ${currentComsetPage} dari ${totalPages}</span>
+                    <button onclick="changeComsetPage(${currentComsetPage + 1})" ${currentComsetPage >= totalPages ? 'disabled class="opacity-50 cursor-not-allowed px-3 py-1 border rounded"' : 'class="px-3 py-1 border rounded hover:bg-slate-50"'}>Berikutnya</button>
+                </div>
+            `;
+        }
+
+        function changeComsetPage(page) {
+            currentComsetPage = page;
+            renderDailyComsetTable();
         }
 
         // --- FITUR WHATSAPP BLAST ---
@@ -929,7 +999,6 @@
                 document.getElementById('mtdSubtitlePeriod').innerText = `Periode MTD: ${monthNames[selectedMonth]} ${selectedYear}`;
             }
 
-            // Filter Tamu YTD / MTD
             currentFilteredGuests = guests.filter(g => {
                 if(!g.dob) return false;
                 const [year, month] = g.dob.split('-');
@@ -973,7 +1042,6 @@
                 filterGuestsByRegion(activeRegionFilter.type, activeRegionFilter.name);
             }
 
-            // Filter Comset YTD / MTD
             const filteredLogs = dailyComsetLogs.filter(l => {
                 if(!l.date) return false;
                 const [year, month] = l.date.split('-');
