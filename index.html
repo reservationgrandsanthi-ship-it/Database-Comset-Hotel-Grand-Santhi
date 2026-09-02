@@ -75,7 +75,6 @@
 
         <main class="max-w-7xl w-full mx-auto px-4 py-6 space-y-6 flex-grow">
 
-            <!-- TAB 1: DASHBOARD -->
             <section id="tab-dashboard" class="tab-content space-y-6">
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                     <div>
@@ -238,9 +237,8 @@
                             <thead class="sticky top-0 bg-slate-50">
                                 <tr class="border-b border-slate-100 text-xs text-slate-400 uppercase">
                                     <th class="py-2.5 px-3">Nama Tamu</th>
-                                    <th class="py-2.5 px-3">Status</th>
                                     <th class="py-2.5 px-3">Kota / Provinsi</th>
-                                    <th class="py-2.5 px-3">Tanggal</th>
+                                    <th class="py-2.5 px-3">Tanggal Check-In</th>
                                     <th class="py-2.5 px-3">No WhatsApp</th>
                                     <th class="py-2.5 px-3 text-center">Aksi WA</th>
                                 </tr>
@@ -279,12 +277,11 @@
                 </div>
             </section>
 
-            <!-- TAB 2: DATABASE TAMU -->
             <section id="tab-guests" class="tab-content hidden space-y-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                     <div>
                         <h2 class="text-xl font-bold text-slate-800">Database Tamu Hotel</h2>
-                        <p class="text-sm text-slate-500">Kelola seluruh informasi tamu yang menginap</p>
+                        <p class="text-sm text-slate-500">Kelola informasi tamu umum yang menginap</p>
                     </div>
                     <button onclick="openGuestModal('add')" class="bg-amber-700 hover:bg-amber-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center shadow-sm">
                         <i class="fa-solid fa-user-plus mr-2"></i> Tambah Tamu Baru
@@ -299,7 +296,8 @@
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-100 text-xs font-semibold text-slate-500 uppercase">
                                     <th class="py-3 px-4">Nama Tamu</th>
-                                    <th class="py-3 px-4">Kota / Provinsi</th>
+                                    <th class="py-3 px-4">Kota</th>
+                                    <th class="py-3 px-4">Provinsi</th>
                                     <th class="py-3 px-4">Tanggal Check-In</th>
                                     <th class="py-3 px-4">No WhatsApp</th>
                                     <th class="py-3 px-4 text-center">Aksi</th>
@@ -311,14 +309,13 @@
                 </div>
             </section>
 
-            <!-- TAB 3: TAMU REPEATER -->
             <section id="tab-repeaters" class="tab-content hidden space-y-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                     <div>
                         <h2 class="text-xl font-bold text-slate-800">Data Tamu Repeater</h2>
-                        <p class="text-sm text-slate-500">Daftar tamu loyal yang telah menginap berulang kali</p>
+                        <p class="text-sm text-slate-500">Daftar tamu loyal (tersimpan di sheet terpisah)</p>
                     </div>
-                    <button onclick="openGuestModal('add', null, true, false)" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center shadow-sm">
+                    <button onclick="openRepeaterModal('add')" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center shadow-sm">
                         <i class="fa-solid fa-user-plus mr-2"></i> Tambah Repeater Baru
                     </button>
                 </div>
@@ -343,14 +340,13 @@
                 </div>
             </section>
 
-            <!-- TAB 4: EXTEND BY DIRECT -->
             <section id="tab-extends" class="tab-content hidden space-y-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                     <div>
                         <h2 class="text-xl font-bold text-slate-800">Data Tamu Extend by Direct</h2>
-                        <p class="text-sm text-slate-500">Daftar tamu yang memperpanjang masa menginap secara langsung</p>
+                        <p class="text-sm text-slate-500">Daftar tamu perpanjangan langsung (tersimpan di sheet terpisah)</p>
                     </div>
-                    <button onclick="openGuestModal('add', null, false, true)" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center shadow-sm">
+                    <button onclick="openExtendModal('add')" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition flex items-center shadow-sm">
                         <i class="fa-solid fa-user-plus mr-2"></i> Tambah Extend Direct
                     </button>
                 </div>
@@ -375,7 +371,6 @@
                 </div>
             </section>
 
-            <!-- TAB 5: DATA COMSET -->
             <section id="tab-comset" class="tab-content hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                     <div>
@@ -410,12 +405,11 @@
                 </div>
             </section>
 
-            <!-- TAB 6: UPSELL & CROSS-SELL (WITH MTD & YTD) -->
             <section id="tab-upsell" class="tab-content hidden space-y-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                     <div>
                         <h2 class="text-xl font-bold text-slate-800">Upselling & Cross-Selling Report</h2>
-                        <p class="text-sm text-slate-500">Laporan transaksi layanan tambahan & perbandingan Bulanan (MTD) / Tahunan (YTD)</p>
+                        <p class="text-sm text-slate-500">Laporan transaksi layanan tambahan (sheet terpisah) & perbandingan MTD / YTD</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-3">
                         <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-sm">
@@ -526,7 +520,6 @@
                 </div>
             </section>
 
-            <!-- TAB 7: SETTING HOTEL -->
             <section id="tab-settings" class="tab-content hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 max-w-2xl mx-auto space-y-6">
                     <div class="border-b border-slate-100 pb-4">
@@ -570,7 +563,6 @@
         </main>
     </div>
 
-    <!-- Modals -->
     <div id="waBlastModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full overflow-hidden">
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
@@ -636,19 +628,91 @@
                         <input type="text" id="guestPhone" placeholder="08xxxxxxxxxx" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-700">
                     </div>
                 </div>
-                <div class="space-y-2 pt-1 border-t border-slate-100">
-                    <label class="flex items-center space-x-2 text-sm text-slate-700 cursor-pointer">
-                        <input type="checkbox" id="guestIsRepeater" class="w-4 h-4 text-amber-700 rounded border-slate-300 focus:ring-amber-500">
-                        <span>Tamu Repeater (Loyal Guest)</span>
-                    </label>
-                    <label class="flex items-center space-x-2 text-sm text-slate-700 cursor-pointer">
-                        <input type="checkbox" id="guestIsExtendDirect" class="w-4 h-4 text-amber-700 rounded border-slate-300 focus:ring-amber-500">
-                        <span>Extend by Direct Booking</span>
-                    </label>
-                </div>
                 <div class="pt-4 flex justify-end space-x-2">
                     <button type="button" onclick="closeGuestModal()" class="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600">Batal</button>
                     <button type="submit" class="px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-lg text-sm font-medium">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Repeater -->
+    <div id="repeaterModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <h3 id="repeaterModalTitle" class="font-bold text-slate-800 text-base">Tambah Tamu Repeater</h3>
+                <button onclick="closeRepeaterModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="repeaterForm" onsubmit="handleRepeaterSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="repeaterId">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Tamu</label>
+                    <input type="text" id="repeaterName" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-700">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Kota</label>
+                        <input type="text" id="repeaterCity" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-700">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Provinsi</label>
+                        <input type="text" id="repeaterProvince" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-700">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Check-In Terakhir</label>
+                        <input type="date" id="repeaterDob" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-700">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">No WhatsApp</label>
+                        <input type="text" id="repeaterPhone" placeholder="08xxxxxxxxxx" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-700">
+                    </div>
+                </div>
+                <div class="pt-4 flex justify-end space-x-2">
+                    <button type="button" onclick="closeRepeaterModal()" class="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-sm font-medium">Simpan Repeater</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Extend Direct -->
+    <div id="extendModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <h3 id="extendModalTitle" class="font-bold text-slate-800 text-base">Tambah Tamu Extend Direct</h3>
+                <button onclick="closeExtendModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="extendForm" onsubmit="handleExtendSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="extendId">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nama Tamu</label>
+                    <input type="text" id="extendName" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-700">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Kota</label>
+                        <input type="text" id="extendCity" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-700">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Provinsi</label>
+                        <input type="text" id="extendProvince" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-700">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Tanggal Check-In</label>
+                        <input type="date" id="extendDob" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-700">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">No WhatsApp</label>
+                        <input type="text" id="extendPhone" placeholder="08xxxxxxxxxx" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-amber-700">
+                    </div>
+                </div>
+                <div class="pt-4 flex justify-end space-x-2">
+                    <button type="button" onclick="closeExtendModal()" class="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-sm font-medium">Simpan Extend</button>
                 </div>
             </form>
         </div>
@@ -755,15 +819,19 @@
         ];
 
         let guests = JSON.parse(localStorage.getItem('hotelGuests')) || [];
+        let repeaters = JSON.parse(localStorage.getItem('hotelRepeaters')) || [];
+        let extendsList = JSON.parse(localStorage.getItem('hotelExtends')) || [];
         let dailyComsetLogs = JSON.parse(localStorage.getItem('dailyComsetLogs')) || [];
-        let upsellLogs = JSON.parse(localStorage.getItem('upsellLogs')) || [
-            { id: 1, date: '2026-03-10', guestName: 'Budi Santoso', serviceType: 'UPGRADE ROOM', qty: 2, price: 300000 },
-            { id: 2, date: '2026-03-12', guestName: 'Siti Rahma', serviceType: 'EARLY C/I', qty: 1, price: 100000 },
-            { id: 3, date: '2025-03-15', guestName: 'Joko Widodo', serviceType: 'UPGRADE ROOM', qty: 1, price: 150000 }
-        ];
+        let upsellLogs = JSON.parse(localStorage.getItem('upsellLogs')) || [];
 
         let activeRegionFilter = null;
         let currentFilteredGuests = [];
+
+        let currentGuestPage = 1;
+        let currentRepeaterPage = 1;
+        let currentExtendPage = 1;
+        let currentComsetPage = 1;
+        const rowsPerPage = 50;
 
         window.onload = function() {
             applyHotelSettingsToUI();
@@ -798,35 +866,160 @@
             sidebar.classList.toggle('hidden');
         }
 
+        function renderGuestsTable() {
+            const tbody = document.getElementById('guestsTableBody');
+            const keyword = document.getElementById('searchGuestInput').value.toLowerCase();
+            tbody.innerHTML = '';
+            
+            const filtered = guests.filter(g => g.name.toLowerCase().includes(keyword) || g.city.toLowerCase().includes(keyword));
+            const totalPages = Math.ceil(filtered.length / rowsPerPage) || 1;
+            if (currentGuestPage > totalPages) currentGuestPage = totalPages;
+            
+            const start = (currentGuestPage - 1) * rowsPerPage;
+            const paginatedItems = filtered.slice(start, start + rowsPerPage);
+            
+            tbody.innerHTML = paginatedItems.map(g => `
+                <tr class="hover:bg-slate-50 border-b border-slate-50">
+                    <td class="py-3 px-4 font-medium">${g.name}</td>
+                    <td class="py-3 px-4 text-slate-600">${g.city}</td>
+                    <td class="py-3 px-4 text-slate-600">${g.province}</td>
+                    <td class="py-3 px-4 text-slate-600">${g.dob}</td>
+                    <td class="py-3 px-4 text-slate-600">${g.phone}</td>
+                    <td class="py-3 px-4 text-center space-x-2">
+                        <button onclick="editGuest(${g.id})" class="text-amber-700 hover:text-amber-900" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteGuest(${g.id})" class="text-rose-500 hover:text-rose-700" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="6" class="py-4 text-center text-slate-400">Belum ada data tamu</td></tr>`;
+
+            renderGuestPaginationControls(filtered.length, totalPages);
+        }
+
+        function renderGuestPaginationControls(totalItems, totalPages) {
+            let paginationContainer = document.getElementById('guestPaginationContainer');
+            if (!paginationContainer) {
+                paginationContainer = document.createElement('div');
+                paginationContainer.id = 'guestPaginationContainer';
+                paginationContainer.className = "p-4 border-t border-slate-100 flex justify-between items-center text-sm text-slate-600";
+                document.querySelector('#tab-guests .bg-white.rounded-xl').appendChild(paginationContainer);
+            }
+            paginationContainer.innerHTML = `
+                <span>Menampilkan ${totalItems === 0 ? 0 : (currentGuestPage - 1) * rowsPerPage + 1} - ${Math.min(currentGuestPage * rowsPerPage, totalItems)} dari ${totalItems} data</span>
+                <div class="space-x-1">
+                    <button onclick="changeGuestPage(${currentGuestPage - 1})" ${currentGuestPage === 1 ? 'disabled class="opacity-50 cursor-not-allowed px-3 py-1 border rounded"' : 'class="px-3 py-1 border rounded hover:bg-slate-50"'}>Sebelumnya</button>
+                    <span class="px-2">Hal ${currentGuestPage} dari ${totalPages}</span>
+                    <button onclick="changeGuestPage(${currentGuestPage + 1})" ${currentGuestPage >= totalPages ? 'disabled class="opacity-50 cursor-not-allowed px-3 py-1 border rounded"' : 'class="px-3 py-1 border rounded hover:bg-slate-50"'}>Berikutnya</button>
+                </div>
+            `;
+        }
+
+        function changeGuestPage(page) { currentGuestPage = page; renderGuestsTable(); }
+
+        function renderRepeatersTable() {
+            const tbody = document.getElementById('repeatersTableBody');
+            const keyword = document.getElementById('searchRepeaterInput')?.value.toLowerCase() || '';
+            const filtered = repeaters.filter(r => r.name.toLowerCase().includes(keyword) || r.city.toLowerCase().includes(keyword));
+            
+            tbody.innerHTML = filtered.map(r => `
+                <tr class="hover:bg-slate-50 border-b border-slate-50">
+                    <td class="py-3 px-4 font-medium text-emerald-800"><i class="fa-solid fa-rotate-right mr-1.5 text-xs"></i>${r.name}</td>
+                    <td class="py-3 px-4 text-slate-600">${r.city}, ${r.province}</td>
+                    <td class="py-3 px-4 text-slate-600">${r.dob}</td>
+                    <td class="py-3 px-4 text-slate-600">${r.phone}</td>
+                    <td class="py-3 px-4 text-center space-x-2">
+                        <button onclick="editRepeater(${r.id})" class="text-amber-700 hover:text-amber-900" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteRepeater(${r.id})" class="text-rose-500 hover:text-rose-700" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="sendSingleWa('${r.name}', '${r.phone}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-2.5 py-1 rounded-md text-xs font-semibold transition ml-2">
+                            <i class="fa-brands fa-whatsapp text-sm mr-1"></i> Chat WA
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="5" class="py-4 text-center text-slate-400">Belum ada data tamu repeater</td></tr>`;
+        }
+
+        function renderExtendsTable() {
+            const tbody = document.getElementById('extendsTableBody');
+            const keyword = document.getElementById('searchExtendInput')?.value.toLowerCase() || '';
+            const filtered = extendsList.filter(e => e.name.toLowerCase().includes(keyword) || e.city.toLowerCase().includes(keyword));
+            
+            tbody.innerHTML = filtered.map(e => `
+                <tr class="hover:bg-slate-50 border-b border-slate-50">
+                    <td class="py-3 px-4 font-medium text-blue-800"><i class="fa-solid fa-calendar-plus mr-1.5 text-xs"></i>${e.name}</td>
+                    <td class="py-3 px-4 text-slate-600">${e.city}, ${e.province}</td>
+                    <td class="py-3 px-4 text-slate-600">${e.dob}</td>
+                    <td class="py-3 px-4 text-slate-600">${e.phone}</td>
+                    <td class="py-3 px-4 text-center space-x-2">
+                        <button onclick="editExtend(${e.id})" class="text-amber-700 hover:text-amber-900" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteExtend(${e.id})" class="text-rose-500 hover:text-rose-700" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="sendSingleWa('${e.name}', '${e.phone}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-2.5 py-1 rounded-md text-xs font-semibold transition ml-2">
+                            <i class="fa-brands fa-whatsapp text-sm mr-1"></i> Chat WA
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="5" class="py-4 text-center text-slate-400">Belum ada data tamu extend by direct</td></tr>`;
+        }
+
+        function renderDailyComsetTable() {
+            const tbody = document.getElementById('dailyComsetTableBody');
+            const totalPages = Math.ceil(dailyComsetLogs.length / rowsPerPage) || 1;
+            if (currentComsetPage > totalPages) currentComsetPage = totalPages;
+            
+            const start = (currentComsetPage - 1) * rowsPerPage;
+            const paginatedItems = dailyComsetLogs.slice(start, start + rowsPerPage);
+            
+            tbody.innerHTML = paginatedItems.map(c => `
+                <tr class="hover:bg-slate-50 border-b border-slate-50">
+                    <td class="py-3 px-3 text-slate-600">${c.date}</td>
+                    <td class="py-3 px-3 font-medium">${c.hotelName}</td>
+                    <td class="py-3 px-3 text-center">${c.roomAvail}</td>
+                    <td class="py-3 px-3 text-center">${c.roomSold}</td>
+                    <td class="py-3 px-3 text-center">${c.roomAvail > 0 ? ((c.roomSold/c.roomAvail)*100).toFixed(1) : 0}%</td>
+                    <td class="py-3 px-3 text-right">Rp ${c.arr.toLocaleString('id-ID')}</td>
+                    <td class="py-3 px-3 text-right font-medium">Rp ${(c.roomSold*c.arr).toLocaleString('id-ID')}</td>
+                    <td class="py-3 px-3 text-center space-x-2">
+                        <button onclick="editComsetLog(${c.id})" class="text-amber-700 hover:text-amber-900" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="deleteComsetLog(${c.id})" class="text-rose-500 hover:text-rose-700" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+
+            renderComsetPaginationControls(dailyComsetLogs.length, totalPages);
+        }
+
+        function renderComsetPaginationControls(totalItems, totalPages) {
+            let paginationContainer = document.getElementById('comsetPaginationContainer');
+            if (!paginationContainer) {
+                paginationContainer = document.createElement('div');
+                paginationContainer.id = 'comsetPaginationContainer';
+                paginationContainer.className = "p-4 border-t border-slate-100 flex justify-between items-center text-sm text-slate-600";
+                document.querySelector('#tab-comset .bg-white.rounded-xl').appendChild(paginationContainer);
+            }
+            paginationContainer.innerHTML = `
+                <span>Menampilkan ${totalItems === 0 ? 0 : (currentComsetPage - 1) * rowsPerPage + 1} - ${Math.min(currentComsetPage * rowsPerPage, totalItems)} dari ${totalItems} data</span>
+                <div class="space-x-1">
+                    <button onclick="changeComsetPage(${currentComsetPage - 1})" ${currentComsetPage === 1 ? 'disabled class="opacity-50 cursor-not-allowed px-3 py-1 border rounded"' : 'class="px-3 py-1 border rounded hover:bg-slate-50"'}>Sebelumnya</button>
+                    <span class="px-2">Hal ${currentComsetPage} dari ${totalPages}</span>
+                    <button onclick="changeComsetPage(${currentComsetPage + 1})" ${currentComsetPage >= totalPages ? 'disabled class="opacity-50 cursor-not-allowed px-3 py-1 border rounded"' : 'class="px-3 py-1 border rounded hover:bg-slate-50"'}>Berikutnya</button>
+                </div>
+            `;
+        }
+
+        function changeComsetPage(page) {
+            currentComsetPage = page;
+            renderDailyComsetTable();
+        }
+
         function toggleFilterMode() {
             const mode = document.getElementById('filterMode').value;
-            const monthContainer = document.getElementById('monthContainer');
-            const yearContainer = document.getElementById('yearContainer');
-            const customDateContainer = document.getElementById('customDateContainer');
-
-            monthContainer.classList.add('hidden');
-            yearContainer.classList.add('hidden');
-            customDateContainer.classList.add('hidden');
-
-            if(mode === 'mtd') {
-                monthContainer.classList.remove('hidden');
-                yearContainer.classList.remove('hidden');
-            } else if(mode === 'ytd') {
-                yearContainer.classList.remove('hidden');
-            } else if(mode === 'custom') {
-                customDateContainer.classList.remove('hidden');
-            }
+            document.getElementById('monthContainer').classList.toggle('hidden', mode !== 'mtd');
+            document.getElementById('yearContainer').classList.toggle('hidden', mode === 'custom');
+            document.getElementById('customDateContainer').classList.toggle('hidden', mode !== 'custom');
             renderDashboard();
         }
 
         function toggleUpsellFilterMode() {
             const mode = document.getElementById('upsellFilterMode').value;
-            const monthContainer = document.getElementById('upsellMonthContainer');
-            if(mode === 'ytd') {
-                monthContainer.classList.add('hidden');
-            } else {
-                monthContainer.classList.remove('hidden');
-            }
+            document.getElementById('upsellMonthContainer').classList.toggle('hidden', mode === 'ytd');
             renderUpsellTab();
         }
 
@@ -835,24 +1028,23 @@
             try {
                 const response = await fetch(`${scriptUrl}?action=getData`);
                 const textResponse = await response.text();
-                
-                // Safety check to prevent HTML error pages from causing JSON parse failure
-                if(textResponse.trim().startsWith('<')) {
-                    console.warn("Google Apps Script mengembalikan HTML (kemungkinan URL deployment belum valid atau terjadi error server). Menggunakan data lokal.");
-                    return;
-                }
+                if(textResponse.trim().startsWith('<')) return;
 
                 const data = JSON.parse(textResponse);
                 if(data.settings) {
                     hotelSettings = data.settings;
-                    if(data.hotelsList && data.hotelsList.length > 0) comsetHotelsList = data.hotelsList;
+                    if(data.hotelsList?.length > 0) comsetHotelsList = data.hotelsList;
                     guests = data.guests || [];
+                    repeaters = data.repeaters || [];
+                    extendsList = data.extendsList || [];
                     dailyComsetLogs = data.comsetLogs || [];
-                    if(data.upsellLogs) upsellLogs = data.upsellLogs;
+                    upsellLogs = data.upsellLogs || [];
                     
                     localStorage.setItem('hotelSettings', JSON.stringify(hotelSettings));
                     localStorage.setItem('comsetHotelsList', JSON.stringify(comsetHotelsList));
                     localStorage.setItem('hotelGuests', JSON.stringify(guests));
+                    localStorage.setItem('hotelRepeaters', JSON.stringify(repeaters));
+                    localStorage.setItem('hotelExtends', JSON.stringify(extendsList));
                     localStorage.setItem('dailyComsetLogs', JSON.stringify(dailyComsetLogs));
                     localStorage.setItem('upsellLogs', JSON.stringify(upsellLogs));
                     
@@ -860,7 +1052,7 @@
                     renderDashboard();
                 }
             } catch (err) {
-                console.warn("Gagal sinkronisasi dengan Google Sheets (menggunakan cache lokal):", err.message);
+                console.warn("Sinkronisasi cloud offline (menggunakan local cache):", err.message);
             }
         }
 
@@ -876,6 +1068,8 @@
                         settings: hotelSettings,
                         hotelsList: comsetHotelsList,
                         guests: guests,
+                        repeaters: repeaters,
+                        extendsList: extendsList,
                         comsetLogs: dailyComsetLogs,
                         upsellLogs: upsellLogs
                     })
@@ -983,92 +1177,13 @@
             switchTab('dashboard');
         }
 
-        // --- GUESTS TABLE ---
-        function renderGuestsTable() {
-            const tbody = document.getElementById('guestsTableBody');
-            const keyword = document.getElementById('searchGuestInput').value.toLowerCase();
-            tbody.innerHTML = '';
-            
-            const filtered = guests.filter(g => g.name.toLowerCase().includes(keyword) || g.city.toLowerCase().includes(keyword));
-            filtered.forEach(g => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-50">
-                        <td class="py-3 px-4 font-medium">${g.name}</td>
-                        <td class="py-3 px-4 text-slate-600">${g.city}, ${g.province}</td>
-                        <td class="py-3 px-4 text-slate-600">${g.dob}</td>
-                        <td class="py-3 px-4 text-slate-600">${g.phone}</td>
-                        <td class="py-3 px-4 text-center space-x-2">
-                            <button onclick="editGuest(${g.id})" class="text-amber-700 hover:text-amber-900" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="deleteGuest(${g.id})" class="text-rose-500 hover:text-rose-700" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        // --- REPEATER TABLE ---
-        function renderRepeatersTable() {
-            const tbody = document.getElementById('repeatersTableBody');
-            const keyword = document.getElementById('searchRepeaterInput')?.value.toLowerCase() || '';
-            tbody.innerHTML = '';
-
-            const repeaters = guests.filter(g => g.isRepeater && (g.name.toLowerCase().includes(keyword) || g.city.toLowerCase().includes(keyword)));
-            repeaters.forEach(g => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-50">
-                        <td class="py-3 px-4 font-medium text-emerald-800"><i class="fa-solid fa-rotate-right mr-1.5 text-xs"></i>${g.name}</td>
-                        <td class="py-3 px-4 text-slate-600">${g.city}, ${g.province}</td>
-                        <td class="py-3 px-4 text-slate-600">${g.dob}</td>
-                        <td class="py-3 px-4 text-slate-600">${g.phone}</td>
-                        <td class="py-3 px-4 text-center">
-                            <button onclick="sendSingleWa('${g.name}', '${g.phone}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-2.5 py-1 rounded-md text-xs font-semibold transition">
-                                <i class="fa-brands fa-whatsapp text-sm mr-1"></i> Chat WA
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            if(repeaters.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">Belum ada data tamu repeater</td></tr>`;
-            }
-        }
-
-        // --- EXTEND DIRECT TABLE ---
-        function renderExtendsTable() {
-            const tbody = document.getElementById('extendsTableBody');
-            const keyword = document.getElementById('searchExtendInput')?.value.toLowerCase() || '';
-            tbody.innerHTML = '';
-
-            const extendsList = guests.filter(g => g.isExtendDirect && (g.name.toLowerCase().includes(keyword) || g.city.toLowerCase().includes(keyword)));
-            extendsList.forEach(g => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-50">
-                        <td class="py-3 px-4 font-medium text-blue-800"><i class="fa-solid fa-calendar-plus mr-1.5 text-xs"></i>${g.name}</td>
-                        <td class="py-3 px-4 text-slate-600">${g.city}, ${g.province}</td>
-                        <td class="py-3 px-4 text-slate-600">${g.dob}</td>
-                        <td class="py-3 px-4 text-slate-600">${g.phone}</td>
-                        <td class="py-3 px-4 text-center">
-                            <button onclick="sendSingleWa('${g.name}', '${g.phone}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-2.5 py-1 rounded-md text-xs font-semibold transition">
-                                <i class="fa-brands fa-whatsapp text-sm mr-1"></i> Chat WA
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            if(extendsList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">Belum ada data tamu extend by direct</td></tr>`;
-            }
-        }
-
-        function openGuestModal(mode, id = null, defaultRepeater = false, defaultExtend = false) {
+        function openGuestModal(mode, id = null) {
             document.getElementById('guestModal').classList.remove('hidden');
             if(mode === 'add') {
                 document.getElementById('guestModalTitle').innerText = "Tambah Tamu Baru";
                 document.getElementById('guestForm').reset();
                 document.getElementById('guestId').value = '';
                 document.getElementById('guestDob').valueAsDate = new Date();
-                document.getElementById('guestIsRepeater').checked = defaultRepeater;
-                document.getElementById('guestIsExtendDirect').checked = defaultExtend;
             } else {
                 document.getElementById('guestModalTitle').innerText = "Edit Data Tamu";
                 const guest = guests.find(g => g.id === id);
@@ -1079,12 +1194,9 @@
                     document.getElementById('guestProvince').value = guest.province;
                     document.getElementById('guestDob').value = guest.dob;
                     document.getElementById('guestPhone').value = guest.phone;
-                    document.getElementById('guestIsRepeater').checked = !!guest.isRepeater;
-                    document.getElementById('guestIsExtendDirect').checked = !!guest.isExtendDirect;
                 }
             }
         }
-
         function closeGuestModal() { document.getElementById('guestModal').classList.add('hidden'); }
 
         function handleGuestSubmit(e) {
@@ -1096,9 +1208,7 @@
                 city: document.getElementById('guestCity').value,
                 province: document.getElementById('guestProvince').value,
                 dob: document.getElementById('guestDob').value,
-                phone: document.getElementById('guestPhone').value,
-                isRepeater: document.getElementById('guestIsRepeater').checked,
-                isExtendDirect: document.getElementById('guestIsExtendDirect').checked
+                phone: document.getElementById('guestPhone').value
             };
 
             if(id) {
@@ -1112,8 +1222,6 @@
             saveDataToCloud('saveGuests');
             closeGuestModal();
             renderGuestsTable();
-            renderRepeatersTable();
-            renderExtendsTable();
             renderDashboard();
         }
 
@@ -1125,13 +1233,124 @@
                 localStorage.setItem('hotelGuests', JSON.stringify(guests));
                 saveDataToCloud('saveGuests');
                 renderGuestsTable();
+                renderDashboard();
+            }
+        }
+
+        function openRepeaterModal(mode = 'add', id = null) {
+            document.getElementById('repeaterModal').classList.remove('hidden');
+            if(mode === 'add') {
+                document.getElementById('repeaterModalTitle').innerText = "Tambah Tamu Repeater";
+                document.getElementById('repeaterForm').reset();
+                document.getElementById('repeaterId').value = '';
+                document.getElementById('repeaterDob').valueAsDate = new Date();
+            } else {
+                document.getElementById('repeaterModalTitle').innerText = "Edit Tamu Repeater";
+                const r = repeaters.find(x => x.id === id);
+                if(r) {
+                    document.getElementById('repeaterId').value = r.id;
+                    document.getElementById('repeaterName').value = r.name;
+                    document.getElementById('repeaterCity').value = r.city;
+                    document.getElementById('repeaterProvince').value = r.province;
+                    document.getElementById('repeaterDob').value = r.dob;
+                    document.getElementById('repeaterPhone').value = r.phone;
+                }
+            }
+        }
+        function closeRepeaterModal() { document.getElementById('repeaterModal').classList.add('hidden'); }
+
+        function handleRepeaterSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('repeaterId').value;
+            const data = {
+                id: id ? Number(id) : Date.now(),
+                name: document.getElementById('repeaterName').value,
+                city: document.getElementById('repeaterCity').value,
+                province: document.getElementById('repeaterProvince').value,
+                dob: document.getElementById('repeaterDob').value,
+                phone: document.getElementById('repeaterPhone').value
+            };
+            if(id) {
+                const idx = repeaters.findIndex(x => x.id == id);
+                if(idx !== -1) repeaters[idx] = data;
+            } else {
+                repeaters.push(data);
+            }
+            localStorage.setItem('hotelRepeaters', JSON.stringify(repeaters));
+            saveDataToCloud('saveRepeaters');
+            closeRepeaterModal();
+            renderRepeatersTable();
+            renderDashboard();
+        }
+
+        function editRepeater(id) { openRepeaterModal('edit', id); }
+        function deleteRepeater(id) {
+            if(confirm('Hapus tamu repeater ini?')) {
+                repeaters = repeaters.filter(x => x.id !== id);
+                localStorage.setItem('hotelRepeaters', JSON.stringify(repeaters));
+                saveDataToCloud('saveRepeaters');
                 renderRepeatersTable();
+                renderDashboard();
+            }
+        }
+
+        function openExtendModal(mode = 'add', id = null) {
+            document.getElementById('extendModal').classList.remove('hidden');
+            if(mode === 'add') {
+                document.getElementById('extendModalTitle').innerText = "Tambah Tamu Extend Direct";
+                document.getElementById('extendForm').reset();
+                document.getElementById('extendId').value = '';
+                document.getElementById('extendDob').valueAsDate = new Date();
+            } else {
+                document.getElementById('extendModalTitle').innerText = "Edit Tamu Extend Direct";
+                const x = extendsList.find(i => i.id === id);
+                if(x) {
+                    document.getElementById('extendId').value = x.id;
+                    document.getElementById('extendName').value = x.name;
+                    document.getElementById('extendCity').value = x.city;
+                    document.getElementById('extendProvince').value = x.province;
+                    document.getElementById('extendDob').value = x.dob;
+                    document.getElementById('extendPhone').value = x.phone;
+                }
+            }
+        }
+        function closeExtendModal() { document.getElementById('extendModal').classList.add('hidden'); }
+
+        function handleExtendSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('extendId').value;
+            const data = {
+                id: id ? Number(id) : Date.now(),
+                name: document.getElementById('extendName').value,
+                city: document.getElementById('extendCity').value,
+                province: document.getElementById('extendProvince').value,
+                dob: document.getElementById('extendDob').value,
+                phone: document.getElementById('extendPhone').value
+            };
+            if(id) {
+                const idx = extendsList.findIndex(i => i.id == id);
+                if(idx !== -1) extendsList[idx] = data;
+            } else {
+                extendsList.push(data);
+            }
+            localStorage.setItem('hotelExtends', JSON.stringify(extendsList));
+            saveDataToCloud('saveExtends');
+            closeExtendModal();
+            renderExtendsTable();
+            renderDashboard();
+        }
+
+        function editExtend(id) { openExtendModal('edit', id); }
+        function deleteExtend(id) {
+            if(confirm('Hapus tamu extend ini?')) {
+                extendsList = extendsList.filter(i => i.id !== id);
+                localStorage.setItem('hotelExtends', JSON.stringify(extendsList));
+                saveDataToCloud('saveExtends');
                 renderExtendsTable();
                 renderDashboard();
             }
         }
 
-        // --- COMSET FUNCTIONS ---
         function openComsetModal(mode = 'add', id = null) {
             document.getElementById('comsetModal').classList.remove('hidden');
             const select = document.getElementById('comsetHotelName');
@@ -1196,26 +1415,6 @@
             }
         }
 
-        function renderDailyComsetTable() {
-            const tbody = document.getElementById('dailyComsetTableBody');
-            tbody.innerHTML = dailyComsetLogs.map(c => `
-                <tr class="hover:bg-slate-50 border-b border-slate-50">
-                    <td class="py-3 px-3 text-slate-600">${c.date}</td>
-                    <td class="py-3 px-3 font-medium">${c.hotelName}</td>
-                    <td class="py-3 px-3 text-center">${c.roomAvail}</td>
-                    <td class="py-3 px-3 text-center">${c.roomSold}</td>
-                    <td class="py-3 px-3 text-center">${c.roomAvail > 0 ? ((c.roomSold/c.roomAvail)*100).toFixed(1) : 0}%</td>
-                    <td class="py-3 px-3 text-right">Rp ${c.arr.toLocaleString('id-ID')}</td>
-                    <td class="py-3 px-3 text-right font-medium">Rp ${(c.roomSold*c.arr).toLocaleString('id-ID')}</td>
-                    <td class="py-3 px-3 text-center space-x-2">
-                        <button onclick="editComsetLog(${c.id})" class="text-amber-700 hover:text-amber-900" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteComsetLog(${c.id})" class="text-rose-500 hover:text-rose-700" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // --- UPSELL & CROSS-SELL (MTD & YTD) ---
         const upsellCategories = [
             "UPGRADE ROOM", "EARLY C/I", "LATE C/O", "E-BED", "MASSAGE", "LAUNDRY", "TRANSPORT", "POOL"
         ];
@@ -1295,28 +1494,12 @@
 
             if(filterMode === 'ytd') {
                 document.getElementById('lblUpsellRevTitle').innerText = `Total Revenue Upsell (YTD ${mYear})`;
-                currentLogs = upsellLogs.filter(u => {
-                    if(!u.date) return false;
-                    const [y] = u.date.split('-');
-                    return y === mYear;
-                });
-                prevLogs = upsellLogs.filter(u => {
-                    if(!u.date) return false;
-                    const [y] = u.date.split('-');
-                    return y === prevYear;
-                });
+                currentLogs = upsellLogs.filter(u => u.date?.startsWith(mYear));
+                prevLogs = upsellLogs.filter(u => u.date?.startsWith(prevYear));
             } else {
                 document.getElementById('lblUpsellRevTitle').innerText = `Total Revenue Upsell (Bulan Ini)`;
-                currentLogs = upsellLogs.filter(u => {
-                    if(!u.date) return false;
-                    const [y, m] = u.date.split('-');
-                    return y === mYear && m === mMonth;
-                });
-                prevLogs = upsellLogs.filter(u => {
-                    if(!u.date) return false;
-                    const [y, m] = u.date.split('-');
-                    return y === prevYear && m === mMonth;
-                });
+                currentLogs = upsellLogs.filter(u => u.date?.startsWith(`${mYear}-${mMonth}`));
+                prevLogs = upsellLogs.filter(u => u.date?.startsWith(`${prevYear}-${mMonth}`));
             }
 
             let totalRevPeriod = currentLogs.reduce((a,b)=>a+b.price, 0);
@@ -1328,8 +1511,7 @@
             let yoyGrowth = prevTotalRev > 0 ? ((totalRevPeriod - prevTotalRev) / prevTotalRev) * 100 : (totalRevPeriod > 0 ? 100 : 0);
             document.getElementById('upsellYoYGrowth').innerText = `${yoyGrowth.toFixed(1)}%`;
 
-            let catMapCurrent = {};
-            let catMapPrev = {};
+            let catMapCurrent = {}, catMapPrev = {};
             upsellCategories.forEach(cat => {
                 catMapCurrent[cat] = { qty: 0, rev: 0 };
                 catMapPrev[cat] = { qty: 0, rev: 0 };
@@ -1347,8 +1529,7 @@
                 catMapPrev[u.serviceType].rev += u.price;
             });
 
-            const tbodyComp = document.getElementById('upsellComparisonTableBody');
-            tbodyComp.innerHTML = upsellCategories.map(cat => {
+            document.getElementById('upsellComparisonTableBody').innerHTML = upsellCategories.map(cat => {
                 let cur = catMapCurrent[cat];
                 let prv = catMapPrev[cat];
                 let growth = prv.rev > 0 ? ((cur.rev - prv.rev) / prv.rev) * 100 : (cur.rev > 0 ? 100 : 0);
@@ -1364,8 +1545,7 @@
                 `;
             }).join('');
 
-            const tbodyHist = document.getElementById('upsellHistoryTableBody');
-            tbodyHist.innerHTML = upsellLogs.sort((a,b)=> new Date(b.date) - new Date(a.date)).map(u => `
+            document.getElementById('upsellHistoryTableBody').innerHTML = upsellLogs.sort((a,b)=> new Date(b.date) - new Date(a.date)).map(u => `
                 <tr class="hover:bg-slate-50 border-b border-slate-50">
                     <td class="py-3 px-4 text-slate-600">${u.date}</td>
                     <td class="py-3 px-4 font-medium text-slate-800">${u.guestName}</td>
@@ -1380,7 +1560,6 @@
             `).join('') || `<tr><td colspan="6" class="py-4 text-center text-slate-400">Belum ada riwayat transaksi upsell</td></tr>`;
         }
 
-        // --- WHATSAPP BLAST ---
         function openWaBlastModal() {
             if(!currentFilteredGuests || currentFilteredGuests.length === 0) {
                 alert("Tidak ada daftar nomor tamu pada filter saat ini!");
@@ -1416,10 +1595,7 @@
             let target = validPhones[0];
             let formattedPhone = target.phone.replace(/^0/, '62');
             let personalizedMsg = templateText.replace(/\[Nama\]/g, target.name);
-            
-            let waUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(personalizedMsg)}`;
-            window.open(waUrl, '_blank');
-            alert(`Membuka WhatsApp untuk ${target.name} (${target.phone}).`);
+            window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(personalizedMsg)}`, '_blank');
         }
 
         function sendSingleWa(name, phone) {
@@ -1463,27 +1639,19 @@
 
         function renderDashboardGuestsTable() {
             const detailGuestsBody = document.getElementById('dashboardDetailGuestsBody');
-            detailGuestsBody.innerHTML = currentFilteredGuests.map(g => {
-                let badge = '';
-                if(g.isRepeater) badge += `<span class="bg-emerald-50 text-emerald-700 text-xs px-2 py-0.5 rounded font-semibold mr-1">Repeater</span>`;
-                if(g.isExtendDirect) badge += `<span class="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded font-semibold">Extend Direct</span>`;
-                if(!badge) badge = `<span class="text-slate-400 text-xs">Standard</span>`;
-
-                return `
-                    <tr class="border-b border-slate-50 hover:bg-slate-50">
-                        <td class="py-2.5 px-3 font-medium text-slate-800">${g.name}</td>
-                        <td class="py-2.5 px-3">${badge}</td>
-                        <td class="py-2.5 px-3 text-slate-600">${g.city}, ${g.province}</td>
-                        <td class="py-2.5 px-3 text-slate-500 text-xs">${g.dob}</td>
-                        <td class="py-2.5 px-3 text-slate-600">${g.phone}</td>
-                        <td class="py-2.5 px-3 text-center">
-                            <button onclick="sendSingleWa('${g.name}', '${g.phone}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-2.5 py-1 rounded-md text-xs font-semibold transition" title="Kirim WA">
-                                <i class="fa-brands fa-whatsapp text-sm"></i> Chat
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('') || `<tr><td colspan="6" class="py-4 text-center text-slate-400">Tidak ada data tamu pada filter ini</td></tr>`;
+            detailGuestsBody.innerHTML = currentFilteredGuests.map(g => `
+                <tr class="border-b border-slate-50 hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-medium text-slate-800">${g.name}</td>
+                    <td class="py-2.5 px-3 text-slate-600">${g.city}, ${g.province}</td>
+                    <td class="py-2.5 px-3 text-slate-500 text-xs">${g.dob}</td>
+                    <td class="py-2.5 px-3 text-slate-600">${g.phone}</td>
+                    <td class="py-2.5 px-3 text-center">
+                        <button onclick="sendSingleWa('${g.name}', '${g.phone}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-2.5 py-1 rounded-md text-xs font-semibold transition" title="Kirim WA">
+                            <i class="fa-brands fa-whatsapp text-sm"></i> Chat
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="5" class="py-4 text-center text-slate-400">Tidak ada data tamu pada filter ini</td></tr>`;
         }
 
         function renderDashboard() {
@@ -1523,17 +1691,14 @@
             });
 
             let cityCounts = {}, provinceCounts = {};
-            let repeatCount = 0, extendCount = 0;
             currentFilteredGuests.forEach(g => {
                 cityCounts[g.city] = (cityCounts[g.city] || 0) + 1;
                 provinceCounts[g.province] = (provinceCounts[g.province] || 0) + 1;
-                if(g.isRepeater) repeatCount++;
-                if(g.isExtendDirect) extendCount++;
             });
 
             document.getElementById('statTotalGuests').innerText = currentFilteredGuests.length;
-            document.getElementById('statRepeaters').innerText = repeatCount;
-            document.getElementById('statExtendDirect').innerText = extendCount;
+            document.getElementById('statRepeaters').innerText = repeaters.length;
+            document.getElementById('statExtendDirect').innerText = extendsList.length;
             document.getElementById('statTotalCities').innerText = Object.keys(cityCounts).length;
 
             let upsellRevPeriod = upsellLogs.filter(u => {
